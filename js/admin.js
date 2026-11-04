@@ -9,7 +9,7 @@ import {
   verifyMasterPassword,
   updateMasterPassword
 } from './data-store.js';
-import { mountMediaUploader } from './media-uploader.js';
+import { mountMediaUploader, mountMultiMediaUploader } from './media-uploader.js';
 
 let currentData = null;
 
@@ -225,55 +225,75 @@ function initProfileTab() {
 /**
  * Projects / Works CRUD Management
  */
-function initProjectsTab() {
-  renderAdminProjectsList();
+let projMultiUploaderInstance = null;
 
-  const btnAdd = document.getElementById('btnOpenAddProjectModal');
-  const modal = document.getElementById('modalProjectBackdrop');
-  const btnClose = document.getElementById('btnCloseProjectModal');
-  const btnCancel = document.getElementById('btnCancelProjectModal');
+function openProjectModal(project = null) {
   const form = document.getElementById('formProjectModal');
+  const modal = document.getElementById('modalProjectBackdrop');
   const modalTitle = document.getElementById('modalProjectTitle');
+  if (!form || !modal) return;
 
-  // Mount Media Uploader for Project Cover
-  const projCoverUploader = mountMediaUploader({
-    containerId: 'projCoverUploaderContainer',
-    hiddenInputId: 'projFormCover',
+  form.reset();
+
+  if (project) {
+    modalTitle.textContent = 'Edit Proyek: ' + (project.title || '');
+    document.getElementById('projFormId').value = project.id || '';
+    document.getElementById('projFormTitle').value = project.title || '';
+    document.getElementById('projFormClient').value = project.client || '';
+    document.getElementById('projFormCategory').value = project.category || '';
+    document.getElementById('projFormCategoryFilter').value = project.categoryFilter || 'fullstack';
+    document.getElementById('projFormYear').value = project.year || '2025';
+    document.getElementById('projFormCover').value = project.coverImage || '';
+    document.getElementById('projFormShortDesc').value = project.shortDescription || '';
+    document.getElementById('projFormChallenge').value = project.challenge || '';
+    document.getElementById('projFormSolution').value = project.solution || '';
+    document.getElementById('projFormImpact').value = project.impact || '';
+    document.getElementById('projFormTags').value = (project.tags || []).join(', ');
+    document.getElementById('projFormDemo').value = project.demoUrl || '';
+    document.getElementById('projFormGithub').value = project.githubUrl || '';
+
+    // Load multi-images gallery
+    const gallery = Array.isArray(project.gallery) && project.gallery.length
+      ? project.gallery
+      : (project.coverImage ? [project.coverImage] : []);
+
+    document.getElementById('projFormGallery').value = JSON.stringify(gallery);
+    projMultiUploaderInstance?.setImages(gallery, project.coverImage || '');
+  } else {
+    modalTitle.textContent = 'Tambah Proyek Baru';
+    document.getElementById('projFormId').value = '';
+    document.getElementById('projFormCover').value = '';
+    document.getElementById('projFormGallery').value = '[]';
+    projMultiUploaderInstance?.setImages([]);
+  }
+
+  modal.classList.add('show');
+}
+
+function closeProjectModal() {
+  const modal = document.getElementById('modalProjectBackdrop');
+  if (modal) modal.classList.remove('show');
+}
+
+function initProjectsTab() {
+  // Mount Multi-Media Uploader for Project Cover & Gallery
+  projMultiUploaderInstance = mountMultiMediaUploader({
+    containerId: 'projMultiUploaderContainer',
+    coverInputId: 'projFormCover',
+    galleryInputId: 'projFormGallery',
     maxWidth: 1400
   });
 
-  const openModal = (project = null) => {
-    form.reset();
-    if (project) {
-      modalTitle.textContent = 'Edit Proyek: ' + project.title;
-      document.getElementById('projFormId').value = project.id;
-      document.getElementById('projFormTitle').value = project.title || '';
-      document.getElementById('projFormClient').value = project.client || '';
-      document.getElementById('projFormCategory').value = project.category || '';
-      document.getElementById('projFormCategoryFilter').value = project.categoryFilter || 'fullstack';
-      document.getElementById('projFormYear').value = project.year || '2025';
-      document.getElementById('projFormCover').value = project.coverImage || '';
-      projCoverUploader?.setValue(project.coverImage || '');
-      document.getElementById('projFormShortDesc').value = project.shortDescription || '';
-      document.getElementById('projFormChallenge').value = project.challenge || '';
-      document.getElementById('projFormSolution').value = project.solution || '';
-      document.getElementById('projFormImpact').value = project.impact || '';
-      document.getElementById('projFormTags').value = (project.tags || []).join(', ');
-      document.getElementById('projFormDemo').value = project.demoUrl || '';
-      document.getElementById('projFormGithub').value = project.githubUrl || '';
-    } else {
-      modalTitle.textContent = 'Tambah Proyek Baru';
-      document.getElementById('projFormId').value = '';
-      projCoverUploader?.setValue('');
-    }
-    modal.classList.add('show');
-  };
+  renderAdminProjectsList();
 
-  const closeModal = () => modal.classList.remove('show');
+  const btnAdd = document.getElementById('btnOpenAddProjectModal');
+  const btnClose = document.getElementById('btnCloseProjectModal');
+  const btnCancel = document.getElementById('btnCancelProjectModal');
+  const form = document.getElementById('formProjectModal');
 
-  if (btnAdd) btnAdd.onclick = () => openModal();
-  if (btnClose) btnClose.onclick = closeModal;
-  if (btnCancel) btnCancel.onclick = closeModal;
+  if (btnAdd) btnAdd.onclick = () => openProjectModal(null);
+  if (btnClose) btnClose.onclick = closeProjectModal;
+  if (btnCancel) btnCancel.onclick = closeProjectModal;
 
   if (form) {
     form.addEventListener('submit', (e) => {
@@ -282,6 +302,19 @@ function initProjectsTab() {
       const tagsStr = document.getElementById('projFormTags').value;
       const tags = tagsStr.split(',').map(t => t.trim()).filter(Boolean);
 
+      let gallery = [];
+      try {
+        const rawGal = document.getElementById('projFormGallery').value;
+        gallery = rawGal ? JSON.parse(rawGal) : [];
+      } catch (err) {
+        gallery = [];
+      }
+
+      const cover = document.getElementById('projFormCover').value || gallery[0] || '';
+      if (!gallery.length && cover) {
+        gallery = [cover];
+      }
+
       const projectPayload = {
         id: id || 'proj-' + Date.now(),
         title: document.getElementById('projFormTitle').value,
@@ -289,7 +322,8 @@ function initProjectsTab() {
         category: document.getElementById('projFormCategory').value,
         categoryFilter: document.getElementById('projFormCategoryFilter').value,
         year: document.getElementById('projFormYear').value,
-        coverImage: document.getElementById('projFormCover').value,
+        coverImage: cover,
+        gallery: gallery,
         shortDescription: document.getElementById('projFormShortDesc').value,
         challenge: document.getElementById('projFormChallenge').value,
         solution: document.getElementById('projFormSolution').value,
@@ -302,17 +336,15 @@ function initProjectsTab() {
       if (!currentData.projects) currentData.projects = [];
 
       if (id) {
-        // Update existing
         const idx = currentData.projects.findIndex(p => p.id === id);
         if (idx !== -1) currentData.projects[idx] = projectPayload;
       } else {
-        // Add new to top
         currentData.projects.unshift(projectPayload);
       }
 
       savePortfolioData(currentData);
       renderAdminProjectsList();
-      closeModal();
+      closeProjectModal();
       showAdminToast('Proyek berhasil disimpan!');
     });
   }
@@ -344,13 +376,13 @@ function renderAdminProjectsList() {
     </div>
   `).join('');
 
-  // Attach actions
+  // Attach actions directly to openProjectModal
   container.querySelectorAll('.btn-edit-proj').forEach(btn => {
     btn.onclick = () => {
       const id = btn.getAttribute('data-id');
       const target = currentData.projects.find(p => p.id === id);
       if (target) {
-        openModal(target);
+        openProjectModal(target);
       }
     };
   });
@@ -698,47 +730,55 @@ function renderAdminExperienceList() {
 /**
  * Testimonials Management
  */
-function initTestimonialsTab() {
-  renderAdminTestimonialsList();
+let testiAvatarUploaderInstance = null;
 
-  const btnAdd = document.getElementById('btnOpenAddTestiModal');
-  const modal = document.getElementById('modalTestiBackdrop');
-  const btnClose = document.getElementById('btnCloseTestiModal');
-  const btnCancel = document.getElementById('btnCancelTestiModal');
+function openTestimonialModal(testi = null) {
   const form = document.getElementById('formTestiModal');
+  const modal = document.getElementById('modalTestiBackdrop');
   const modalTitle = document.getElementById('modalTestiTitle');
+  if (!form || !modal) return;
 
+  form.reset();
+  if (testi) {
+    modalTitle.textContent = 'Edit Ulasan: ' + (testi.author || '');
+    document.getElementById('testiFormId').value = testi.id;
+    document.getElementById('testiFormAuthor').value = testi.author || '';
+    document.getElementById('testiFormRole').value = `${testi.role || ''} — ${testi.company || ''}`;
+    document.getElementById('testiFormAvatar').value = testi.avatar || '';
+    testiAvatarUploaderInstance?.setValue(testi.avatar || '');
+    document.getElementById('testiFormRating').value = testi.rating || 5;
+    document.getElementById('testiFormQuote').value = testi.quote || '';
+  } else {
+    modalTitle.textContent = 'Tambah Ulasan Baru';
+    document.getElementById('testiFormId').value = '';
+    testiAvatarUploaderInstance?.setValue('');
+  }
+  modal.classList.add('show');
+}
+
+function closeTestimonialModal() {
+  const modal = document.getElementById('modalTestiBackdrop');
+  if (modal) modal.classList.remove('show');
+}
+
+function initTestimonialsTab() {
   // Mount Media Uploader for Testimonial Avatar
-  const testiAvatarUploader = mountMediaUploader({
+  testiAvatarUploaderInstance = mountMediaUploader({
     containerId: 'testiAvatarUploaderContainer',
     hiddenInputId: 'testiFormAvatar',
     maxWidth: 400
   });
 
-  const openModal = (testi = null) => {
-    form.reset();
-    if (testi) {
-      modalTitle.textContent = 'Edit Ulasan: ' + testi.author;
-      document.getElementById('testiFormId').value = testi.id;
-      document.getElementById('testiFormAuthor').value = testi.author || '';
-      document.getElementById('testiFormRole').value = `${testi.role || ''} — ${testi.company || ''}`;
-      document.getElementById('testiFormAvatar').value = testi.avatar || '';
-      testiAvatarUploader?.setValue(testi.avatar || '');
-      document.getElementById('testiFormRating').value = testi.rating || 5;
-      document.getElementById('testiFormQuote').value = testi.quote || '';
-    } else {
-      modalTitle.textContent = 'Tambah Ulasan Baru';
-      document.getElementById('testiFormId').value = '';
-      testiAvatarUploader?.setValue('');
-    }
-    modal.classList.add('show');
-  };
+  renderAdminTestimonialsList();
 
-  const closeModal = () => modal.classList.remove('show');
+  const btnAdd = document.getElementById('btnOpenAddTestiModal');
+  const btnClose = document.getElementById('btnCloseTestiModal');
+  const btnCancel = document.getElementById('btnCancelTestiModal');
+  const form = document.getElementById('formTestiModal');
 
-  if (btnAdd) btnAdd.onclick = () => openModal();
-  if (btnClose) btnClose.onclick = closeModal;
-  if (btnCancel) btnCancel.onclick = closeModal;
+  if (btnAdd) btnAdd.onclick = () => openTestimonialModal(null);
+  if (btnClose) btnClose.onclick = closeTestimonialModal;
+  if (btnCancel) btnCancel.onclick = closeTestimonialModal;
 
   if (form) {
     form.addEventListener('submit', (e) => {
@@ -770,7 +810,7 @@ function initTestimonialsTab() {
 
       savePortfolioData(currentData);
       renderAdminTestimonialsList();
-      closeModal();
+      closeTestimonialModal();
       showAdminToast('Ulasan klien berhasil disimpan!');
     });
   }
@@ -802,7 +842,7 @@ function renderAdminTestimonialsList() {
       const id = btn.getAttribute('data-id');
       const target = currentData.testimonials.find(t => t.id === id);
       if (target) {
-        openModal(target);
+        openTestimonialModal(target);
       }
     };
   });

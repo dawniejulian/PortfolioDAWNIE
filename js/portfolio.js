@@ -238,7 +238,7 @@ function renderProjects(projects) {
 }
 
 /**
- * Open Project Case Study Dialog
+ * Open Project Case Study Dialog (with Multi-Image Interactive Gallery Carousel)
  */
 function openProjectModal(project) {
   const dialog = document.getElementById('projectDialog');
@@ -254,7 +254,77 @@ function openProjectModal(project) {
   const demoLink = document.getElementById('dialogDemoLink');
   const githubLink = document.getElementById('dialogGithubLink');
 
-  if (heroImg) heroImg.src = project.coverImage;
+  const prevBtn = document.getElementById('dialogPrevImgBtn');
+  const nextBtn = document.getElementById('dialogNextImgBtn');
+  const counter = document.getElementById('dialogImgCounter');
+  const strip = document.getElementById('dialogThumbnailsStrip');
+
+  // Multi-image gallery list
+  const gallery = Array.isArray(project.gallery) && project.gallery.length
+    ? project.gallery
+    : (project.coverImage ? [project.coverImage] : []);
+
+  let activeImgIndex = 0;
+
+  function setModalImage(idx) {
+    if (!gallery.length) return;
+    activeImgIndex = (idx + gallery.length) % gallery.length;
+    if (heroImg) heroImg.src = gallery[activeImgIndex];
+
+    if (counter) {
+      counter.textContent = `${activeImgIndex + 1} / ${gallery.length}`;
+    }
+
+    if (strip) {
+      strip.querySelectorAll('.dialog-thumb-pill').forEach((pill, pIdx) => {
+        pill.classList.toggle('active', pIdx === activeImgIndex);
+      });
+    }
+  }
+
+  // Setup gallery controls if multiple images exist
+  if (gallery.length > 1) {
+    if (prevBtn) {
+      prevBtn.style.display = 'grid';
+      prevBtn.onclick = (e) => {
+        e.stopPropagation();
+        setModalImage(activeImgIndex - 1);
+      };
+    }
+    if (nextBtn) {
+      nextBtn.style.display = 'grid';
+      nextBtn.onclick = (e) => {
+        e.stopPropagation();
+        setModalImage(activeImgIndex + 1);
+      };
+    }
+    if (counter) counter.style.display = 'block';
+
+    if (strip) {
+      strip.style.display = 'flex';
+      strip.innerHTML = gallery.map((imgUrl, i) => `
+        <div class="dialog-thumb-pill ${i === 0 ? 'active' : ''}" data-idx="${i}">
+          <img src="${imgUrl}" alt="Thumbnail ${i + 1}">
+        </div>
+      `).join('');
+
+      strip.querySelectorAll('.dialog-thumb-pill').forEach(pill => {
+        pill.onclick = (e) => {
+          e.stopPropagation();
+          const idx = parseInt(pill.getAttribute('data-idx'), 10);
+          setModalImage(idx);
+        };
+      });
+    }
+  } else {
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
+    if (counter) counter.style.display = 'none';
+    if (strip) strip.style.display = 'none';
+  }
+
+  setModalImage(0);
+
   if (title) title.textContent = project.title;
   if (clientLine) clientLine.textContent = `${project.client} • Tahun ${project.year || '2025'} • ${project.category}`;
   if (tagsRow) {

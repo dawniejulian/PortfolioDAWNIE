@@ -275,7 +275,15 @@
     <div class="dialog-header">
       <img id="dialogHeroImg" class="dialog-hero-img" src="" alt="Cover Proyek">
       <button type="button" class="dialog-close-btn" id="dialogCloseBtn" aria-label="Tutup Dialog">✕</button>
+
+      <!-- Multi-Image Carousel Controls -->
+      <button type="button" class="dialog-nav-btn prev-btn" id="dialogPrevImgBtn" aria-label="Gambar Sebelumnya">‹</button>
+      <button type="button" class="dialog-nav-btn next-btn" id="dialogNextImgBtn" aria-label="Gambar Berikutnya">›</button>
+      <span class="dialog-img-counter" id="dialogImgCounter" style="display: none;">1 / 1</span>
     </div>
+
+    <!-- Thumbnails Filmstrip -->
+    <div class="dialog-thumbnails-strip" id="dialogThumbnailsStrip" style="display: none;"></div>
     <div class="dialog-body">
       <div class="dialog-tags" id="dialogTags"></div>
       <h2 class="dialog-title" id="dialogTitle">Judul Proyek</h2>
