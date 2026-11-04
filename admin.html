@@ -234,9 +234,14 @@
               <h2 class="panel-title">Keahlian &amp; Stack Teknologi</h2>
               <p class="panel-desc">Kelola kategori kemampuan (Frontend, Backend, UI/UX) dan teknologi spesifik.</p>
             </div>
-            <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddSkillModal">
-              <span>+</span> <span>Tambah Item Keahlian</span>
-            </button>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button type="button" class="btn-admin" id="btnOpenAddCategoryModal">
+                <span>+</span> <span>Tambah Kategori Baru</span>
+              </button>
+              <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddSkillModal">
+                <span>+</span> <span>Tambah Item Keahlian</span>
+              </button>
+            </div>
           </div>
 
           <div class="admin-card">
@@ -727,6 +732,79 @@
         <div class="modal-footer">
           <button type="button" class="btn-admin" id="btnCancelTestiModal">Batal</button>
           <button type="submit" class="btn-admin btn-admin-primary">Simpan Ulasan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. SKILL ITEM MODAL -->
+  <div class="admin-modal-backdrop" id="modalSkillBackdrop">
+    <div class="admin-modal-dialog" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalSkillTitle">Kelola Keterampilan &amp; Stack</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseSkillModal">✕</button>
+      </div>
+      <form id="formSkillModal">
+        <input type="hidden" id="skillFormCatIdx" name="catIdx" value="-1">
+        <input type="hidden" id="skillFormItemIdx" name="itemIdx" value="-1">
+        <div class="modal-body">
+          <div class="form-field">
+            <label for="skillFormCategorySelect">Pilih Kategori Keahlian</label>
+            <select id="skillFormCategorySelect" name="categorySelect">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <div class="form-field" id="skillNewCatGroup" style="display: none;">
+            <label for="skillFormNewCategory">Nama Kategori Baru</label>
+            <input type="text" id="skillFormNewCategory" name="newCategory" placeholder="Misal: Cloud, AI Engineering, Mobile Dev">
+          </div>
+          <div class="form-field">
+            <label for="skillFormName">Nama Teknologi / Keterampilan</label>
+            <input type="text" id="skillFormName" name="name" placeholder="Misal: TypeScript, Next.js, PostgreSQL, Figma" required>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="skillFormBadge">Badge / Klasifikasi</label>
+              <input type="text" id="skillFormBadge" name="badge" placeholder="Misal: Core, Framework, Database, DevOps, Styling" required>
+            </div>
+            <div class="form-field">
+              <label for="skillFormLevel">Tingkat Penguasaan</label>
+              <select id="skillFormLevel" name="level">
+                <option value="Pakar">Pakar (Expert)</option>
+                <option value="Mahir" selected>Mahir (Proficient)</option>
+                <option value="Kompeten">Kompeten (Competent)</option>
+                <option value="Menengah">Menengah (Intermediate)</option>
+                <option value="Familier">Familier (Familiar)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-admin" id="btnCancelSkillModal">Batal</button>
+          <button type="submit" class="btn-admin btn-admin-primary">Simpan Keahlian</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. CATEGORY MODAL -->
+  <div class="admin-modal-backdrop" id="modalCategoryBackdrop">
+    <div class="admin-modal-dialog" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalCategoryTitle">Kelola Kategori Keahlian</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseCategoryModal">✕</button>
+      </div>
+      <form id="formCategoryModal">
+        <input type="hidden" id="categoryFormIdx" name="idx" value="-1">
+        <div class="modal-body">
+          <div class="form-field">
+            <label for="categoryFormName">Nama Kategori</label>
+            <input type="text" id="categoryFormName" name="name" placeholder="Misal: Mobile Engineering, Cloud &amp; AI" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-admin" id="btnCancelCategoryModal">Batal</button>
+          <button type="submit" class="btn-admin btn-admin-primary">Simpan Kategori</button>
         </div>
       </form>
     </div>

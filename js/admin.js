@@ -406,31 +406,188 @@ function renderAdminProjectsList() {
 function initSkillsTab() {
   renderAdminSkills();
 
-  const btnAdd = document.getElementById('btnOpenAddSkillModal');
-  if (btnAdd) {
-    btnAdd.onclick = () => {
-      const catName = prompt('Masukkan nama kategori keahlian (contoh: Frontend Architecture, DevOps, UI/UX):', 'Frontend Architecture');
-      if (!catName) return;
+  const modalSkill = document.getElementById('modalSkillBackdrop');
+  const btnCloseSkill = document.getElementById('btnCloseSkillModal');
+  const btnCancelSkill = document.getElementById('btnCancelSkillModal');
+  const formSkill = document.getElementById('formSkillModal');
+  const modalSkillTitle = document.getElementById('modalSkillTitle');
+  const catSelect = document.getElementById('skillFormCategorySelect');
+  const newCatGroup = document.getElementById('skillNewCatGroup');
+  const newCatInput = document.getElementById('skillFormNewCategory');
 
-      const skillName = prompt('Nama teknologi / skill:', 'TypeScript');
-      if (!skillName) return;
+  const modalCat = document.getElementById('modalCategoryBackdrop');
+  const btnCloseCat = document.getElementById('btnCloseCategoryModal');
+  const btnCancelCat = document.getElementById('btnCancelCategoryModal');
+  const formCat = document.getElementById('formCategoryModal');
+  const modalCatTitle = document.getElementById('modalCategoryTitle');
 
-      const badge = prompt('Tipe Badge (contoh: Core, Framework, Cloud):', 'Core') || 'Tech';
-      const level = prompt('Tingkat (contoh: Mahir, Pakar, Menengah):', 'Mahir') || 'Mahir';
+  // Toggle new category input when "__new__" is selected
+  if (catSelect) {
+    catSelect.addEventListener('change', () => {
+      if (catSelect.value === '__new__') {
+        newCatGroup.style.display = 'block';
+        newCatInput.required = true;
+        newCatInput.focus();
+      } else {
+        newCatGroup.style.display = 'none';
+        newCatInput.required = false;
+      }
+    });
+  }
+
+  // Open Skill Modal
+  window.openSkillModal = (catIdx = -1, itemIdx = -1) => {
+    formSkill.reset();
+    document.getElementById('skillFormCatIdx').value = catIdx;
+    document.getElementById('skillFormItemIdx').value = itemIdx;
+
+    const skills = currentData.skills || [];
+
+    // Populate category dropdown
+    catSelect.innerHTML = skills.map((c, i) => `
+      <option value="${i}">${escapeHTML(c.category)}</option>
+    `).join('') + '<option value="__new__">+ Buat Kategori Baru...</option>';
+
+    if (skills.length === 0) {
+      catSelect.value = '__new__';
+      newCatGroup.style.display = 'block';
+      newCatInput.required = true;
+    } else {
+      newCatGroup.style.display = 'none';
+      newCatInput.required = false;
+    }
+
+    if (catIdx >= 0 && itemIdx >= 0 && skills[catIdx] && skills[catIdx].items[itemIdx]) {
+      // EDIT EXISTING SKILL
+      const item = skills[catIdx].items[itemIdx];
+      modalSkillTitle.textContent = `Edit Keahlian: ${item.name}`;
+      catSelect.value = String(catIdx);
+      document.getElementById('skillFormName').value = item.name || '';
+      document.getElementById('skillFormBadge').value = item.badge || 'Core';
+      document.getElementById('skillFormLevel').value = item.level || 'Mahir';
+    } else if (catIdx >= 0 && skills[catIdx]) {
+      // ADD SKILL TO SPECIFIC CATEGORY
+      modalSkillTitle.textContent = `Tambah Keahlian ke: ${skills[catIdx].category}`;
+      catSelect.value = String(catIdx);
+      document.getElementById('skillFormName').value = '';
+      document.getElementById('skillFormBadge').value = 'Core';
+      document.getElementById('skillFormLevel').value = 'Mahir';
+    } else {
+      // ADD NEW SKILL (DEFAULT)
+      modalSkillTitle.textContent = 'Tambah Item Keahlian & Stack';
+      document.getElementById('skillFormName').value = '';
+      document.getElementById('skillFormBadge').value = 'Core';
+      document.getElementById('skillFormLevel').value = 'Mahir';
+    }
+
+    modalSkill.classList.add('show');
+  };
+
+  const closeSkillModal = () => modalSkill.classList.remove('show');
+  if (btnCloseSkill) btnCloseSkill.onclick = closeSkillModal;
+  if (btnCancelSkill) btnCancelSkill.onclick = closeSkillModal;
+
+  // Open Category Modal
+  window.openCategoryModal = (catIdx = -1) => {
+    formCat.reset();
+    document.getElementById('categoryFormIdx').value = catIdx;
+    const skills = currentData.skills || [];
+
+    if (catIdx >= 0 && skills[catIdx]) {
+      modalCatTitle.textContent = `Ganti Nama Kategori: ${skills[catIdx].category}`;
+      document.getElementById('categoryFormName').value = skills[catIdx].category;
+    } else {
+      modalCatTitle.textContent = 'Tambah Kategori Keahlian Baru';
+      document.getElementById('categoryFormName').value = '';
+    }
+
+    modalCat.classList.add('show');
+  };
+
+  const closeCatModal = () => modalCat.classList.remove('show');
+  if (btnCloseCat) btnCloseCat.onclick = closeCatModal;
+  if (btnCancelCat) btnCancelCat.onclick = closeCatModal;
+
+  // Header Buttons
+  const btnAddSkill = document.getElementById('btnOpenAddSkillModal');
+  if (btnAddSkill) btnAddSkill.onclick = () => window.openSkillModal(-1, -1);
+
+  const btnAddCat = document.getElementById('btnOpenAddCategoryModal');
+  if (btnAddCat) btnAddCat.onclick = () => window.openCategoryModal(-1);
+
+  // Submit Skill Form
+  if (formSkill) {
+    formSkill.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const origCatIdx = parseInt(document.getElementById('skillFormCatIdx').value, 10);
+      const itemIdx = parseInt(document.getElementById('skillFormItemIdx').value, 10);
+      const name = document.getElementById('skillFormName').value.trim();
+      const badge = document.getElementById('skillFormBadge').value.trim() || 'Core';
+      const level = document.getElementById('skillFormLevel').value;
+
+      if (!name) return;
 
       if (!currentData.skills) currentData.skills = [];
 
-      let categoryObj = currentData.skills.find(c => c.category.toLowerCase() === catName.toLowerCase());
-      if (!categoryObj) {
-        categoryObj = { category: catName, items: [] };
-        currentData.skills.push(categoryObj);
+      let targetCatIdx = -1;
+      if (catSelect.value === '__new__') {
+        const newCatName = newCatInput.value.trim() || 'Keahlian Baru';
+        const existIdx = currentData.skills.findIndex(c => c.category.toLowerCase() === newCatName.toLowerCase());
+        if (existIdx !== -1) {
+          targetCatIdx = existIdx;
+        } else {
+          currentData.skills.push({ category: newCatName, items: [] });
+          targetCatIdx = currentData.skills.length - 1;
+        }
+      } else {
+        targetCatIdx = parseInt(catSelect.value, 10);
       }
 
-      categoryObj.items.push({ name: skillName, badge: badge, level: level });
+      const itemPayload = { name, badge, level };
+
+      if (origCatIdx >= 0 && itemIdx >= 0 && currentData.skills[origCatIdx]) {
+        // Editing existing item
+        if (origCatIdx === targetCatIdx) {
+          currentData.skills[targetCatIdx].items[itemIdx] = itemPayload;
+        } else {
+          currentData.skills[origCatIdx].items.splice(itemIdx, 1);
+          if (!currentData.skills[targetCatIdx].items) currentData.skills[targetCatIdx].items = [];
+          currentData.skills[targetCatIdx].items.push(itemPayload);
+        }
+      } else {
+        // Adding new item
+        if (!currentData.skills[targetCatIdx].items) currentData.skills[targetCatIdx].items = [];
+        currentData.skills[targetCatIdx].items.push(itemPayload);
+      }
+
       savePortfolioData(currentData);
       renderAdminSkills();
-      showAdminToast('Keahlian baru berhasil ditambahkan!');
-    };
+      closeSkillModal();
+      showAdminToast('Keahlian berhasil disimpan!');
+    });
+  }
+
+  // Submit Category Form
+  if (formCat) {
+    formCat.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const catIdx = parseInt(document.getElementById('categoryFormIdx').value, 10);
+      const catName = document.getElementById('categoryFormName').value.trim();
+
+      if (!catName) return;
+      if (!currentData.skills) currentData.skills = [];
+
+      if (catIdx >= 0 && currentData.skills[catIdx]) {
+        currentData.skills[catIdx].category = catName;
+      } else {
+        currentData.skills.push({ category: catName, items: [] });
+      }
+
+      savePortfolioData(currentData);
+      renderAdminSkills();
+      closeCatModal();
+      showAdminToast('Kategori keahlian berhasil disimpan!');
+    });
   }
 }
 
@@ -439,50 +596,118 @@ function renderAdminSkills() {
   if (!container) return;
 
   const skills = currentData.skills || [];
+
+  if (skills.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 3rem 1rem; color: var(--admin-text-muted);">
+        <p style="font-size: 1.05rem; margin-bottom: 1rem;">Belum ada kategori keahlian.</p>
+        <button type="button" class="btn-admin btn-admin-primary" onclick="window.openCategoryModal(-1)">
+          + Buat Kategori Pertama
+        </button>
+      </div>
+    `;
+    return;
+  }
+
   container.innerHTML = skills.map((cat, catIdx) => `
     <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--admin-border);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h4 style="font-size: 1.1rem; color: var(--admin-accent); font-weight: 600;">${escapeHTML(cat.category)}</h4>
-        <button type="button" class="btn-admin btn-admin-danger btn-del-cat" data-cat-idx="${catIdx}" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">Hapus Kategori</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.6rem;">
+        <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+          <h4 style="font-size: 1.15rem; color: var(--admin-accent); font-weight: 600;">${escapeHTML(cat.category)}</h4>
+          <span style="font-size: 0.75rem; color: var(--admin-text-dim); background: rgba(255, 255, 255, 0.05); padding: 0.2rem 0.6rem; border-radius: var(--radius-full); font-family: var(--font-mono);">
+            ${(cat.items || []).length} item
+          </span>
+          <button type="button" class="btn-admin btn-edit-cat" data-cat-idx="${catIdx}" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;" title="Ubah Nama Kategori">
+            ✎ Ganti Nama
+          </button>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+          <button type="button" class="btn-admin btn-add-skill-to-cat" data-cat-idx="${catIdx}" style="padding: 0.3rem 0.75rem; font-size: 0.78rem; background: var(--admin-card-hover);">
+            + Tambah Skill di Sini
+          </button>
+          <button type="button" class="btn-admin btn-admin-danger btn-del-cat" data-cat-idx="${catIdx}" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">
+            Hapus Kategori
+          </button>
+        </div>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 0.6rem;">
-        ${(cat.items || []).map((item, itemIdx) => `
-          <div style="display: flex; align-items: center; justify-content: space-between; background: var(--admin-bg); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--admin-border);">
-            <div>
-              <strong style="font-size: 0.9rem;">${escapeHTML(item.name)}</strong>
-              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--admin-accent); margin-left: 0.6rem;">[${escapeHTML(item.badge)}]</span>
-              <span style="font-size: 0.75rem; color: var(--admin-text-dim); margin-left: 0.4rem;">• ${escapeHTML(item.level)}</span>
+        ${(cat.items || []).length === 0 ? `
+          <div style="padding: 1.2rem; text-align: center; color: var(--admin-text-dim); font-size: 0.85rem; border: 1px dashed var(--admin-border); border-radius: var(--radius-sm);">
+            Belum ada keterampilan di kategori ini. Klik tombol <strong>+ Tambah Skill di Sini</strong> di atas.
+          </div>
+        ` : (cat.items || []).map((item, itemIdx) => `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: var(--admin-bg); padding: 0.75rem 1.1rem; border-radius: var(--radius-sm); border: 1px solid var(--admin-border); gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+              <strong style="font-size: 0.92rem; color: var(--admin-text-main);">${escapeHTML(item.name)}</strong>
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--admin-accent); background: rgba(212, 163, 115, 0.12); padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid rgba(212, 163, 115, 0.25);">[${escapeHTML(item.badge)}]</span>
+              <span style="font-size: 0.75rem; color: var(--admin-text-dim);">• Tingkat: ${escapeHTML(item.level)}</span>
             </div>
-            <button type="button" class="btn-del-skill" data-cat-idx="${catIdx}" data-item-idx="${itemIdx}" style="background: transparent; border: none; color: var(--admin-danger); cursor: pointer; font-size: 0.8rem;">✕ Hapus</button>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: auto;">
+              <button type="button" class="btn-admin btn-edit-skill" data-cat-idx="${catIdx}" data-item-idx="${itemIdx}" style="padding: 0.28rem 0.65rem; font-size: 0.75rem; background: var(--admin-surface);">
+                ✎ Edit
+              </button>
+              <button type="button" class="btn-del-skill" data-cat-idx="${catIdx}" data-item-idx="${itemIdx}" style="background: transparent; border: 1px solid rgba(239, 68, 68, 0.25); color: var(--admin-danger); cursor: pointer; font-size: 0.78rem; padding: 0.28rem 0.6rem; border-radius: var(--radius-sm); transition: all 0.2s;">
+                ✕ Hapus
+              </button>
+            </div>
           </div>
         `).join('')}
       </div>
     </div>
   `).join('');
 
-  // Remove category
+  // Wire Edit Category
+  container.querySelectorAll('.btn-edit-cat').forEach(btn => {
+    btn.onclick = () => {
+      const idx = parseInt(btn.getAttribute('data-cat-idx'), 10);
+      if (window.openCategoryModal) window.openCategoryModal(idx);
+    };
+  });
+
+  // Wire Add Skill to Specific Category
+  container.querySelectorAll('.btn-add-skill-to-cat').forEach(btn => {
+    btn.onclick = () => {
+      const idx = parseInt(btn.getAttribute('data-cat-idx'), 10);
+      if (window.openSkillModal) window.openSkillModal(idx, -1);
+    };
+  });
+
+  // Wire Edit Skill
+  container.querySelectorAll('.btn-edit-skill').forEach(btn => {
+    btn.onclick = () => {
+      const catIdx = parseInt(btn.getAttribute('data-cat-idx'), 10);
+      const itemIdx = parseInt(btn.getAttribute('data-item-idx'), 10);
+      if (window.openSkillModal) window.openSkillModal(catIdx, itemIdx);
+    };
+  });
+
+  // Wire Delete category
   container.querySelectorAll('.btn-del-cat').forEach(btn => {
     btn.onclick = () => {
       const idx = parseInt(btn.getAttribute('data-cat-idx'), 10);
-      if (confirm('Hapus seluruh kategori ini?')) {
+      const catName = currentData.skills[idx]?.category || 'kategori ini';
+      if (confirm(`Hapus seluruh kategori "${catName}" beserta semua keterampilannya?`)) {
         currentData.skills.splice(idx, 1);
         savePortfolioData(currentData);
         renderAdminSkills();
-        showAdminToast('Kategori keahlian dihapus.');
+        showAdminToast('Kategori keahlian berhasil dihapus.');
       }
     };
   });
 
-  // Remove single skill item
+  // Wire Delete single skill item
   container.querySelectorAll('.btn-del-skill').forEach(btn => {
     btn.onclick = () => {
       const catIdx = parseInt(btn.getAttribute('data-cat-idx'), 10);
       const itemIdx = parseInt(btn.getAttribute('data-item-idx'), 10);
-      currentData.skills[catIdx].items.splice(itemIdx, 1);
-      savePortfolioData(currentData);
-      renderAdminSkills();
-      showAdminToast('Item keahlian dihapus.');
+      const itemName = currentData.skills[catIdx]?.items[itemIdx]?.name || 'item ini';
+      if (confirm(`Hapus keterampilan "${itemName}"?`)) {
+        currentData.skills[catIdx].items.splice(itemIdx, 1);
+        savePortfolioData(currentData);
+        renderAdminSkills();
+        showAdminToast('Item keahlian berhasil dihapus.');
+      }
     };
   });
 }
