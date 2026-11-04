@@ -352,6 +352,7 @@ function openProjectModal(project) {
     }
   }
 
+  dialog.scrollTop = 0;
   dialog.showModal();
 }
 
@@ -359,8 +360,11 @@ function openProjectModal(project) {
 document.addEventListener('DOMContentLoaded', () => {
   const dialog = document.getElementById('projectDialog');
   const closeBtn = document.getElementById('dialogCloseBtn');
-  if (closeBtn && dialog) {
-    closeBtn.addEventListener('click', () => dialog.close());
+  const bottomCloseBtn = document.getElementById('dialogCloseBottomBtn');
+
+  if (dialog) {
+    if (closeBtn) closeBtn.addEventListener('click', () => dialog.close());
+    if (bottomCloseBtn) bottomCloseBtn.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (e) => {
       if (e.target === dialog) dialog.close();
     });
