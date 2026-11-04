@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMS Studio — Kelola Konten Portofolio Tanpa Koding</title>
+  <meta name="description" content="Dashboard Content Management System visual untuk memperbarui seluruh bagian web portofolio secara instan.">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+</head>
+<body>
+
+  <!-- ==============================================================
+       SECURITY AUTH GATE / STUDIO VAULT (Protected Lock Screen)
+       ============================================================== -->
+  <div class="auth-gate-wrapper" id="authGate">
+    <div class="auth-card" id="authCard">
+      <div class="auth-monogram">DP</div>
+      <h2 class="auth-title">Atelier Studio CMS</h2>
+      <p class="auth-desc">Akses terproteksi khusus pemilik portofolio. Silakan masukkan kata sandi Anda.</p>
+
+      <form class="auth-form" id="formAuthGate">
+        <div class="auth-input-wrap">
+          <input type="password" id="authPasswordInput" class="auth-input" placeholder="Masukkan Kata Sandi..." required autofocus autocomplete="current-password">
+          <div class="auth-error-msg" id="authErrorMsg">Kata sandi tidak sesuai. Silakan coba lagi.</div>
+        </div>
+
+        <button type="submit" class="auth-btn-submit" id="btnAuthSubmit">
+          Buka Studio CMS →
+        </button>
+      </form>
+
+      <a href="index.html" class="auth-footer-link">
+        ← Kembali ke Web Portofolio Publik
+      </a>
+    </div>
+  </div>
+
+  <!-- Authenticated Admin Shell (Hidden until authorized) -->
+  <div id="adminApp" style="display: none; width: 100%; min-height: 100vh;">
+  <div class="admin-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-brand">
+        <div>
+          <div class="brand-text">Dawnie Studio</div>
+          <div style="font-size: 0.72rem; color: var(--admin-text-muted);">Visual CMS Engine</div>
+        </div>
+        <span class="brand-badge">v1.2</span>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="CMS Navigation">
+        <div class="nav-section-title">Konten Portofolio</div>
+        <a class="sidebar-link active" data-tab="tab-profile">
+          <span>👤</span> <span>Profil &amp; Hero</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-projects">
+          <span>💼</span> <span>Karya &amp; Proyek</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-skills">
+          <span>⚡</span> <span>Keahlian &amp; Stack</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-services">
+          <span>🛠️</span> <span>Layanan &amp; Nilai</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-experience">
+          <span>📜</span> <span>Riwayat Karir</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-testimonials">
+          <span>💬</span> <span>Ulasan Klien</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-socials">
+          <span>🌐</span> <span>Sosial &amp; Kontak</span>
+        </a>
+
+        <div class="nav-section-title">Personalisasi &amp; Sistem</div>
+        <a class="sidebar-link" data-tab="tab-theme">
+          <span>🎨</span> <span>Warna &amp; Tema</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-security">
+          <span>🔒</span> <span>Keamanan &amp; Password</span>
+        </a>
+        <a class="sidebar-link" data-tab="tab-backup">
+          <span>💾</span> <span>Backup &amp; Data JSON</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="index.html" class="btn-view-site" target="_blank" rel="noopener noreferrer">
+          <span>👁️</span> <span>Lihat Web Portofolio ↗</span>
+        </a>
+        <button type="button" class="btn-admin btn-admin-danger" id="btnLogoutCms" style="width: 100%; justify-content: center; margin-top: 0.3rem;">
+          <span>🚪</span> <span>Kunci &amp; Keluar (Logout)</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <div class="topbar-title">
+          <span id="topbarActiveTitle">Profil &amp; Hero</span>
+          <div class="topbar-status">Tersinkronisasi Otomatis</div>
+        </div>
+
+        <div class="topbar-actions">
+          <button type="button" class="btn-admin" id="btnExportQuick">
+            <span>📥</span> <span>Unduh JSON</span>
+          </button>
+          <button type="button" class="btn-admin btn-admin-primary" id="btnSaveAll">
+            <span>💾</span> <span>Simpan Perubahan</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content-body">
+
+        <!-- ==========================================
+             TAB 1: PROFIL & HERO
+             ========================================== -->
+        <section id="tab-profile" class="tab-pane active">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Profil Pribadi &amp; Hero Section</h2>
+              <p class="panel-desc">Kelola informasi nama, peran spesialisasi, bio, status ketersediaan, dan foto utama.</p>
+            </div>
+          </div>
+
+          <form id="formProfile">
+            <div class="admin-card">
+              <h3 class="admin-card-title">Identitas Utama</h3>
+              
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label for="profName">Nama Lengkap</label>
+                  <input type="text" id="profName" name="name" required>
+                  <span class="field-hint">Nama yang tampil di navigasi dan judul utama.</span>
+                </div>
+
+                <div class="form-field">
+                  <label for="profRole">Peran / Gelar Profesional</label>
+                  <input type="text" id="profRole" name="role" required>
+                  <span class="field-hint">Misal: Fullstack Web Developer &amp; UI/UX Designer</span>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="profStatusBadge">Pill Badge Status Ketersediaan</label>
+                <input type="text" id="profStatusBadge" name="statusBadge">
+                <span class="field-hint">Misal: Tersedia untuk Proyek Baru &amp; Kolaborasi (Q2 2026)</span>
+              </div>
+
+              <div class="form-field">
+                <label for="profTagline">Tagline Utama (Sub-headline)</label>
+                <input type="text" id="profTagline" name="tagline">
+              </div>
+
+              <div class="form-field">
+                <label for="profBio">Biografi Singkat</label>
+                <textarea id="profBio" name="bio" rows="4"></textarea>
+                <span class="field-hint">Ceritakan filosofi kerja, pengalaman, dan apa yang membuat pendekatan Anda unik.</span>
+              </div>
+            </div>
+
+            <div class="admin-card">
+              <h3 class="admin-card-title">Foto Profil &amp; Statistik Kunci</h3>
+
+              <div class="form-field">
+                <label>Foto Profil / Cover Utama</label>
+                <input type="hidden" id="profAvatarUrl" name="avatarUrl">
+                <div id="profAvatarUploaderContainer"></div>
+                <span class="field-hint">Pilih file gambar langsung dari perangkat Anda atau tempel tautan Google Drive.</span>
+              </div>
+
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label for="profYears">Tahun Pengalaman</label>
+                  <input type="text" id="profYears" name="yearsExperience" placeholder="5+ Tahun">
+                </div>
+                <div class="form-field">
+                  <label for="profCompleted">Karya / Proyek Selesai</label>
+                  <input type="text" id="profCompleted" name="completedProjects" placeholder="38+ Proyek">
+                </div>
+                <div class="form-field">
+                  <label for="profSatisfaction">Tingkat Kepuasan</label>
+                  <input type="text" id="profSatisfaction" name="satisfactionRate" placeholder="99.4%">
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label for="profLocation">Lokasi &amp; Ketersediaan Kerja</label>
+                  <input type="text" id="profLocation" name="location" placeholder="Jakarta, Indonesia (Bisa Remote)">
+                </div>
+                <div class="form-field">
+                  <label for="profEmail">Alamat Email Utama</label>
+                  <input type="email" id="profEmail" name="email">
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-admin btn-admin-primary">
+              <span>💾</span> <span>Simpan Profil</span>
+            </button>
+          </form>
+        </section>
+
+        <!-- ==========================================
+             TAB 2: KARYA & PROYEK
+             ========================================== -->
+        <section id="tab-projects" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Manajemen Karya &amp; Studi Kasus</h2>
+              <p class="panel-desc">Tambah, ubah, atau hapus proyek portofolio. Setiap karya dilengkapi studi kasus interaktif.</p>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddProjectModal">
+              <span>+</span> <span>Tambah Proyek Baru</span>
+            </button>
+          </div>
+
+          <div class="items-list" id="adminProjectsList">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 3: KEAHLIAN & TECH STACK
+             ========================================== -->
+        <section id="tab-skills" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Keahlian &amp; Stack Teknologi</h2>
+              <p class="panel-desc">Kelola kategori kemampuan (Frontend, Backend, UI/UX) dan teknologi spesifik.</p>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddSkillModal">
+              <span>+</span> <span>Tambah Item Keahlian</span>
+            </button>
+          </div>
+
+          <div class="admin-card">
+            <h3 class="admin-card-title">Daftar Kategori &amp; Keterampilan</h3>
+            <div id="adminSkillsList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 4: LAYANAN & PILAR NILAI
+             ========================================== -->
+        <section id="tab-services" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Layanan &amp; Penawaran Profesional</h2>
+              <p class="panel-desc">Jelaskan pilar layanan yang Anda tawarkan beserta poin deliverables konkret.</p>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddServiceModal">
+              <span>+</span> <span>Tambah Layanan Baru</span>
+            </button>
+          </div>
+
+          <div class="items-list" id="adminServicesList">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 5: RIWAYAT KARIR & PENGALAMAN
+             ========================================== -->
+        <section id="tab-experience" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Riwayat Karir &amp; Milestone</h2>
+              <p class="panel-desc">Susun linimasa pengalaman kerja, peranan kepemimpinan, dan pencapaian.</p>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddExpModal">
+              <span>+</span> <span>Tambah Riwayat Karir</span>
+            </button>
+          </div>
+
+          <div class="items-list" id="adminExperienceList">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 6: ULASAN & TESTIMONIAL
+             ========================================== -->
+        <section id="tab-testimonials" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Ulasan &amp; Kata Klien</h2>
+              <p class="panel-desc">Tampilkan feedback terpercaya dari rekan kerja, pendiri perusahaan, atau klien Anda.</p>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddTestiModal">
+              <span>+</span> <span>Tambah Ulasan Baru</span>
+            </button>
+          </div>
+
+          <div class="items-list" id="adminTestimonialsList">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 7: SOSIAL & KONTAK
+             ========================================== -->
+        <section id="tab-socials" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Tautan Media Sosial &amp; Pengaturan Kontak</h2>
+              <p class="panel-desc">Kelola link ke GitHub, LinkedIn, Figma, WhatsApp, dan teks pengantar formulir.</p>
+            </div>
+          </div>
+
+          <form id="formContactSettings">
+            <div class="admin-card">
+              <h3 class="admin-card-title">Teks Formulir Kontak</h3>
+              <div class="form-field">
+                <label for="contactHeadingInput">Judul Ajakan Kontak</label>
+                <input type="text" id="contactHeadingInput" name="heading" required>
+              </div>
+              <div class="form-field">
+                <label for="contactSubheadingInput">Penjelasan Ajakan</label>
+                <textarea id="contactSubheadingInput" name="subheading" rows="3" required></textarea>
+              </div>
+              <div class="form-field">
+                <label for="contactDirectEmailInput">Alamat Surel Langsung</label>
+                <input type="email" id="contactDirectEmailInput" name="directEmail" required>
+              </div>
+              <button type="submit" class="btn-admin btn-admin-primary">
+                <span>💾</span> <span>Simpan Pengaturan Kontak</span>
+              </button>
+            </div>
+          </form>
+
+          <div class="admin-card">
+            <div class="admin-card-title">
+              <span>Tautan Profil Sosial</span>
+              <button type="button" class="btn-admin" id="btnAddSocialLink">
+                <span>+</span> <span>Tambah Tautan</span>
+              </button>
+            </div>
+            <div id="adminSocialsList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 8: TEMA & PERSONALISASI
+             ========================================== -->
+        <section id="tab-theme" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Estetika, Warna &amp; Personalisasi</h2>
+              <p class="panel-desc">Sesuaikan palet warna aksen elegan agar portofolio memiliki karakter unik Anda.</p>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <h3 class="admin-card-title">Warna Aksen Elegan (Bespoke Palette)</h3>
+            <p style="color: var(--admin-text-muted); font-size: 0.88rem; margin-bottom: 1rem;">
+              Pilih dari palet kurasi berkelas atelier kami atau masukkan kode HEX kustom:
+            </p>
+
+            <div class="color-swatches-grid">
+              <button type="button" class="color-swatch-btn" data-color="#d4a373">
+                <span class="color-circle" style="background: #d4a373;"></span>
+                <span>Warm Champagne</span>
+              </button>
+              <button type="button" class="color-swatch-btn" data-color="#c96b4b">
+                <span class="color-circle" style="background: #c96b4b;"></span>
+                <span>Terracotta Rust</span>
+              </button>
+              <button type="button" class="color-swatch-btn" data-color="#2ec4b6">
+                <span class="color-circle" style="background: #2ec4b6;"></span>
+                <span>Atelier Cyan / Sage</span>
+              </button>
+              <button type="button" class="color-swatch-btn" data-color="#b892ff">
+                <span class="color-circle" style="background: #b892ff;"></span>
+                <span>Lavender Slate</span>
+              </button>
+              <button type="button" class="color-swatch-btn" data-color="#e0a96d">
+                <span class="color-circle" style="background: #e0a96d;"></span>
+                <span>Ochre Bronze</span>
+              </button>
+            </div>
+
+            <div class="form-field" style="margin-top: 1.5rem; max-width: 320px;">
+              <label for="customAccentColor">Kode Warna Kustom (HEX)</label>
+              <div style="display: flex; gap: 0.8rem; align-items: center;">
+                <input type="color" id="customColorPicker" value="#d4a373" style="width: 50px; height: 42px; padding: 2px; cursor: pointer;">
+                <input type="text" id="customAccentColor" value="#d4a373" placeholder="#d4a373">
+              </div>
+            </div>
+
+            <button type="button" class="btn-admin btn-admin-primary" id="btnApplyColor" style="margin-top: 1rem;">
+              <span>🎨</span> <span>Terapkan Warna Aksen</span>
+            </button>
+          </div>
+
+          <div class="admin-card">
+            <h3 class="admin-card-title">Mode Tampilan Bawaan</h3>
+            <div class="form-field" style="max-width: 320px;">
+              <label for="defaultThemeMode">Tema Default Saat Dibuka Pengunjung</label>
+              <select id="defaultThemeMode">
+                <option value="dark">Warm Obsidian Dark (Direkomendasikan)</option>
+                <option value="light">Editorial Cream Paper (Majalah Mode)</option>
+              </select>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnApplyThemeMode" style="margin-top: 0.5rem;">
+              <span>🌓</span> <span>Simpan Mode Tampilan</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 9: BACKUP & DATA JSON
+             ========================================== -->
+        <section id="tab-backup" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Pusat Backup &amp; Migrasi Data Portofolio</h2>
+              <p class="panel-desc">Unduh salinan cadangan portofolio Anda atau impor data kapan pun tanpa kehilangan data.</p>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <h3 class="admin-card-title">📥 Unduh Backup Portofolio (Export JSON)</h3>
+            <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+              Simpan seluruh data portofolio (profil, karya, ulasan, keahlian) ke dalam 1 file <code>.json</code> aman di komputer Anda.
+            </p>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnExportFull">
+              <span>📥</span> <span>Unduh File Backup Portofolio (.json)</span>
+            </button>
+          </div>
+
+          <div class="admin-card">
+            <h3 class="admin-card-title">📤 Pulihkan / Impor Data (Import JSON)</h3>
+            <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+              Unggah file backup <code>.json</code> yang sebelumnya Anda unduh untuk mengganti atau memulihkan data portofolio.
+            </p>
+            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+            <button type="button" class="btn-admin" id="btnTriggerImport">
+              <span>📤</span> <span>Pilih File Backup JSON</span>
+            </button>
+          </div>
+
+          <div class="admin-card" style="border-color: rgba(224, 108, 117, 0.3);">
+            <h3 class="admin-card-title" style="color: var(--admin-danger);">⚠️ Kembalikan ke Data Kurasi Awal</h3>
+            <p style="color: var(--admin-text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+              Kembalikan seluruh isi website ke contoh awal (Dawnie Pratama) yang telah dirancang dengan standar kualitas tinggi.
+            </p>
+            <button type="button" class="btn-admin btn-admin-danger" id="btnResetDefaults">
+              <span>↺</span> <span>Reset Seluruh Data ke Bawaan</span>
+            </button>
+          </div>
+        <!-- ==========================================
+             TAB 10: KEAMANAN & PASSWORD
+             ========================================== -->
+        <section id="tab-security" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Keamanan &amp; Kata Sandi CMS</h2>
+              <p class="panel-desc">Ganti kata sandi master untuk mencegah akses tidak sah ke dashboard CMS Anda.</p>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <h3 class="admin-card-title">Perbarui Kata Sandi Master</h3>
+            <p style="color: var(--admin-text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
+              Kata sandi dienkripsi dengan standar <strong>SHA-256</strong> secara lokal di peramban Anda.
+            </p>
+
+            <form id="formChangePassword">
+              <div class="form-field" style="max-width: 440px;">
+                <label for="currentPasswordInput">Kata Sandi Saat Ini</label>
+                <input type="password" id="currentPasswordInput" required placeholder="Masukkan kata sandi saat ini">
+              </div>
+
+              <div class="form-field" style="max-width: 440px;">
+                <label for="newPasswordInput">Kata Sandi Baru</label>
+                <input type="password" id="newPasswordInput" minlength="6" required placeholder="Minimal 6 karakter">
+              </div>
+
+              <div class="form-field" style="max-width: 440px;">
+                <label for="confirmPasswordInput">Konfirmasi Kata Sandi Baru</label>
+                <input type="password" id="confirmPasswordInput" minlength="6" required placeholder="Ulangi kata sandi baru">
+              </div>
+
+              <button type="submit" class="btn-admin btn-admin-primary" style="margin-top: 0.5rem;">
+                <span>🔒</span> <span>Simpan Kata Sandi Baru</span>
+              </button>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+  </div> <!-- Close adminApp -->
+
+  <!-- ==============================================================
+       MODALS FOR ADD/EDIT ITEMS (NATIVE ACCESSIBLE OVERLAYS)
+       ============================================================== -->
+
+  <!-- 1. PROJECT MODAL -->
+  <div class="admin-modal-backdrop" id="modalProjectBackdrop">
+    <div class="admin-modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalProjectTitle">Tambah Proyek Baru</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseProjectModal">✕</button>
+      </div>
+      <form id="formProjectModal">
+        <input type="hidden" id="projFormId" name="id">
+        <div class="modal-body">
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="projFormTitle">Judul Proyek</label>
+              <input type="text" id="projFormTitle" name="title" required placeholder="Misal: Kolektif — Platform Kurasi Kriya">
+            </div>
+            <div class="form-field">
+              <label for="projFormClient">Nama Klien / Inisiator</label>
+              <input type="text" id="projFormClient" name="client" placeholder="Misal: Atelier Studio Lab">
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-field">
+              <label for="projFormCategory">Kategori Tampilan</label>
+              <input type="text" id="projFormCategory" name="category" placeholder="Misal: Fullstack &amp; UI/UX">
+            </div>
+            <div class="form-field">
+              <label for="projFormCategoryFilter">Filter Tab</label>
+              <select id="projFormCategoryFilter" name="categoryFilter">
+                <option value="fullstack">Fullstack &amp; Web</option>
+                <option value="saas">Product &amp; SaaS</option>
+                <option value="creative">Creative &amp; Audio</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="projFormYear">Tahun</label>
+              <input type="text" id="projFormYear" name="year" placeholder="2025">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Gambar Sampul Proyek (Cover Image)</label>
+            <input type="hidden" id="projFormCover" name="coverImage">
+            <div id="projCoverUploaderContainer"></div>
+            <span class="field-hint">Unggah gambar dari perangkat (JPG/PNG/WEBP) atau tempel tautan Google Drive Anda.</span>
+          </div>
+
+          <div class="form-field">
+            <label for="projFormShortDesc">Deskripsi Ringkas (Tampil di Kartu)</label>
+            <textarea id="projFormShortDesc" name="shortDescription" rows="2" required placeholder="Penjelasan 1-2 kalimat mengenai esensi proyek..."></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="projFormChallenge">Tantangan &amp; Masalah (Studi Kasus)</label>
+              <textarea id="projFormChallenge" name="challenge" rows="3" placeholder="Masalah utama yang dihadapi pengguna atau bisnis..."></textarea>
+            </div>
+            <div class="form-field">
+              <label for="projFormSolution">Solusi &amp; Pendekatan Teknis</label>
+              <textarea id="projFormSolution" name="solution" rows="3" placeholder="Arsitektur kode dan desain yang Anda bangun..."></textarea>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="projFormImpact">Dampak &amp; Metrik Hasil</label>
+            <input type="text" id="projFormImpact" name="impact" placeholder="Misal: Meningkatkan konversi 185% dan mencatat 45k pengunjung aktif">
+          </div>
+
+          <div class="form-field">
+            <label for="projFormTags">Tags Teknologi (Pisahkan dengan koma)</label>
+            <input type="text" id="projFormTags" name="tags" placeholder="React, Node.js, PostgreSQL, Figma">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="projFormDemo">URL Live Demo (Opsional)</label>
+              <input type="url" id="projFormDemo" name="demoUrl" placeholder="https://...">
+            </div>
+            <div class="form-field">
+              <label for="projFormGithub">URL Repositori GitHub (Opsional)</label>
+              <input type="url" id="projFormGithub" name="githubUrl" placeholder="https://github.com/...">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-admin" id="btnCancelProjectModal">Batal</button>
+          <button type="submit" class="btn-admin btn-admin-primary">Simpan Proyek</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. SERVICE MODAL -->
+  <div class="admin-modal-backdrop" id="modalServiceBackdrop">
+    <div class="admin-modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalServiceTitle">Kelola Layanan</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseServiceModal">✕</button>
+      </div>
+      <form id="formServiceModal">
+        <input type="hidden" id="srvFormId" name="id">
+        <div class="modal-body">
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="srvFormNumber">Nomor / Urutan</label>
+              <input type="text" id="srvFormNumber" name="number" placeholder="01" required>
+            </div>
+            <div class="form-field">
+              <label for="srvFormTitle">Nama Layanan</label>
+              <input type="text" id="srvFormTitle" name="title" placeholder="Misal: Fullstack Web Engineering" required>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="srvFormTagline">Tagline Ringkas</label>
+            <input type="text" id="srvFormTagline" name="tagline" placeholder="Misal: Performa Cepat &amp; Arsitektur Skalabel">
+          </div>
+          <div class="form-field">
+            <label for="srvFormDesc">Penjelasan Layanan</label>
+            <textarea id="srvFormDesc" name="description" rows="3" required></textarea>
+          </div>
+          <div class="form-field">
+            <label for="srvFormDeliverables">Poin Deliverables (Pisahkan dengan baris baru / Enter)</label>
+            <textarea id="srvFormDeliverables" name="deliverables" rows="4" placeholder="Single Page &amp; SSR Apps&#10;REST API Architecture&#10;Database Optimization"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-admin" id="btnCancelServiceModal">Batal</button>
+          <button type="submit" class="btn-admin btn-admin-primary">Simpan Layanan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. EXPERIENCE MODAL -->
+  <div class="admin-modal-backdrop" id="modalExpBackdrop">
+    <div class="admin-modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalExpTitle">Kelola Riwayat Karir</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseExpModal">✕</button>
+      </div>
+      <form id="formExpModal">
+        <input type="hidden" id="expFormId" name="id">
+        <div class="modal-body">
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="expFormRole">Posisi / Jabatan</label>
+              <input type="text" id="expFormRole" name="role" placeholder="Misal: Lead Fullstack &amp; Product Designer" required>
+            </div>
+            <div class="form-field">
+              <label for="expFormCompany">Nama Perusahaan / Studio</label>
+              <input type="text" id="expFormCompany" name="company" placeholder="Misal: Studio Aksara Digital" required>
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="expFormPeriod">Periode Waktu</label>
+              <input type="text" id="expFormPeriod" name="period" placeholder="2023 — Sekarang" required>
+            </div>
+            <div class="form-field">
+              <label for="expFormLocation">Lokasi / Tipe Kerja</label>
+              <input type="text" id="expFormLocation" name="location" placeholder="Jakarta (Hybrid)">
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="expFormDesc">Deskripsi Pencapaian &amp; Tanggung Jawab</label>
+            <textarea id="expFormDesc" name="description" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-admin" id="btnCancelExpModal">Batal</button>
+          <button type="submit" class="btn-admin btn-admin-primary">Simpan Karir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. TESTIMONIAL MODAL -->
+  <div class="admin-modal-backdrop" id="modalTestiBackdrop">
+    <div class="admin-modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTestiTitle">Kelola Ulasan Klien</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseTestiModal">✕</button>
+      </div>
+      <form id="formTestiModal">
+        <input type="hidden" id="testiFormId" name="id">
+        <div class="modal-body">
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="testiFormAuthor">Nama Pemberi Ulasan</label>
+              <input type="text" id="testiFormAuthor" name="author" required placeholder="Misal: Aditya Wardhana">
+            </div>
+            <div class="form-field">
+              <label for="testiFormRole">Jabatan &amp; Perusahaan</label>
+              <input type="text" id="testiFormRole" name="role" required placeholder="Co-Founder &amp; CEO — Atelier Studio Lab">
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label>Foto / Avatar Pemberi Ulasan</label>
+              <input type="hidden" id="testiFormAvatar" name="avatar">
+              <div id="testiAvatarUploaderContainer"></div>
+            </div>
+            <div class="form-field">
+              <label for="testiFormRating">Bintang (1 s.d. 5)</label>
+              <select id="testiFormRating" name="rating">
+                <option value="5">★★★★★ (5 Bintang)</option>
+                <option value="4">★★★★☆ (4 Bintang)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="testiFormQuote">Isi Kutipan Ulasan</label>
+            <textarea id="testiFormQuote" name="quote" rows="4" required placeholder="Kesan dan penilaian terhadap hasil kerja Anda..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-admin" id="btnCancelTestiModal">Batal</button>
+          <button type="submit" class="btn-admin btn-admin-primary">Simpan Ulasan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="admin-toast" id="adminToast">
+    <span>✨</span> <span id="adminToastMsg">Perubahan berhasil disimpan!</span>
+  </div>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

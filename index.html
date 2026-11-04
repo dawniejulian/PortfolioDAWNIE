@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dawnie Pratama — Fullstack Web Developer & UI/UX Designer</title>
+  <meta name="description" content="Portofolio terkurasi Fullstack Web Developer & UI/UX Designer berestetika editorial dengan arsitektur kode skalabel dan sistem interaktif.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>">
+</head>
+<body>
+
+  <!-- Analog Film Grain Overlay for Tactile Human Feel -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- Site Navigation -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-inner">
+      <a href="#hero" class="brand-logo" id="brandLogo">
+        <div class="brand-monogram" id="brandMonogram">DP</div>
+        <div>
+          <span class="brand-name" id="brandName">Dawnie Pratama</span>
+          <span class="brand-role" id="brandRole">Fullstack &amp; UI/UX</span>
+        </div>
+      </a>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#services" class="nav-link">Layanan</a></li>
+          <li><a href="#projects" class="nav-link">Karya</a></li>
+          <li><a href="#skills" class="nav-link">Keahlian</a></li>
+          <li><a href="#experience" class="nav-link">Pengalaman</a></li>
+          <li><a href="#testimonials" class="nav-link">Ulasan</a></li>
+          <li><a href="#contact" class="nav-link">Kontak</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#contact" class="btn-primary" style="padding: 0.55rem 1.3rem; font-size: 0.82rem;">
+          <span>Diskusi Proyek</span>
+        </a>
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Ganti Tema Gelap / Terang" title="Ganti Mode Tampilan (Gelap / Terang)">
+          <span>◐</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-text-col">
+            <div class="status-badge" id="statusBadge">
+              <span class="status-indicator"></span>
+              <span id="statusBadgeText">Tersedia untuk Proyek Baru & Kolaborasi (Q2 2026)</span>
+            </div>
+
+            <h1 class="hero-title" id="heroRole">
+              Fullstack Web <span class="highlight">Developer</span> &amp; UI/UX <span class="highlight">Architect</span>
+            </h1>
+
+            <p class="hero-bio" id="heroTagline">
+              Merancang antarmuka digital bernilai estetika tinggi dengan pondasi rekayasa perangkat lunak yang kokoh & skalabel.
+            </p>
+
+            <div class="hero-cta-group">
+              <a href="#contact" class="btn-primary" id="heroCtaBtn">Mulai Diskusi Proyek</a>
+              <a href="#projects" class="btn-secondary">Jelajahi Karya Terpilih ↓</a>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat-item">
+                <div class="stat-number" id="statYears">5+ <em>Thn</em></div>
+                <div class="stat-label">Pengalaman Industri</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="statProjects">38+ <em>Karya</em></div>
+                <div class="stat-label">Proyek Terselesaikan</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="statSatisfaction">99.4%</div>
+                <div class="stat-label">Kepuasan Klien</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Atelier Visual Card -->
+          <div class="hero-visual-col">
+            <div class="hero-visual-card">
+              <div class="visual-frame">
+                <img class="visual-image" id="heroAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="Foto Dawnie Pratama">
+                <div class="visual-caption">
+                  <div class="visual-location" id="heroLocation">Jakarta, Indonesia (Bisa Remote / On-site)</div>
+                  <div class="visual-tag">Atelier 2026</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services / Pillars Section -->
+    <section class="section-padding" id="services" style="background: var(--bg-secondary);">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">Filosofi &amp; Kapabilitas</span>
+          <h2 class="section-title">Rekayasa presisi tinggi berpadu dengan <em>sentuhan artistik</em></h2>
+          <p class="section-subtitle">
+            Setiap solusi digital dibangun dengan mempertimbangkan pengalaman pengguna yang intuitif, kecepatan waktu muat, dan skalabilitas kode jangka panjang.
+          </p>
+        </header>
+
+        <div class="services-grid" id="servicesContainer">
+          <!-- Dynamically populated from data-store.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Works / Projects Section -->
+    <section class="section-padding" id="projects">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">Karya Terpilih</span>
+          <h2 class="section-title">Eksplorasi proyek nyata dengan <em>dampak terukur</em></h2>
+          <p class="section-subtitle">
+            Klik pada setiap proyek untuk membaca studi kasus lengkap mengenai tantangan, arsitektur teknis, dan hasil yang dicapai.
+          </p>
+        </header>
+
+        <!-- Category Filters -->
+        <div class="projects-filter-bar" id="projectsFilter">
+          <!-- Filter buttons rendered dynamically -->
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="projects-grid" id="projectsContainer">
+          <!-- Dynamically populated from data-store.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Matrix Section -->
+    <section class="section-padding" id="skills" style="background: var(--bg-secondary);">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">Tech Stack &amp; Disiplin</span>
+          <h2 class="section-title">Peralatan kerja &amp; <em>keahlian teknis</em> teruji</h2>
+          <p class="section-subtitle">
+            Kombinasi modern antara rekayasa perangkat lunak modern dan metodologi perancangan produk digital standar industri global.
+          </p>
+        </header>
+
+        <div class="skills-container" id="skillsContainer">
+          <!-- Dynamically populated from data-store.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience & Milestones Section -->
+    <section class="section-padding" id="experience">
+      <div class="container">
+        <header class="section-header" style="text-align: center; margin-bottom: 5rem;">
+          <span class="section-label">Jejak Langkah Profesional</span>
+          <h2 class="section-title" style="margin: 0 auto;">Riwayat dedikasi &amp; <em>pencapaian karir</em></h2>
+          <p class="section-subtitle" style="margin: 1.2rem auto 0;">
+            Pengalaman mendalam bekerja sama dengan startup tahap awal, agensi kreatif, hingga enterprise berskala besar.
+          </p>
+        </header>
+
+        <div class="experience-timeline" id="experienceContainer">
+          <!-- Dynamically populated from data-store.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials / Word of Mouth -->
+    <section class="section-padding" id="testimonials" style="background: var(--bg-secondary);">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">Kata Mereka</span>
+          <h2 class="section-title">Kolaborasi yang berakar pada <em>kepercayaan &amp; kualitas</em></h2>
+          <p class="section-subtitle">
+            Apa yang dikatakan oleh para pendiri perusahaan, rekan engineer, dan klien mengenai ritme kerja dan hasil akhir yang dihadirkan.
+          </p>
+        </header>
+
+        <div class="testimonials-grid" id="testimonialsContainer">
+          <!-- Dynamically populated from data-store.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact & Discussion Section -->
+    <section class="section-padding" id="contact">
+      <div class="container">
+        <div class="contact-container">
+          <div class="contact-info-col">
+            <div>
+              <span class="section-label">Mari Terhubung</span>
+              <h2 class="section-title" id="contactHeading" style="font-size: 2.5rem; margin-bottom: 1.5rem;">
+                Mari wujudkan ide digital Anda bersama
+              </h2>
+              <p class="section-subtitle" id="contactSubheading">
+                Punya proyek menarik, ide produk baru, atau ingin berdiskusi seputar web architecture &amp; UI/UX? Pintu saya selalu terbuka.
+              </p>
+
+              <div class="contact-email-card">
+                <div class="contact-email-label">Surel Langsung (Direct Mail)</div>
+                <div class="contact-email-val" id="directEmailVal">dawnie.pratama@studio.id</div>
+                <button type="button" class="btn-copy-email" id="copyEmailBtn">
+                  <span>📋</span> <span>Salin alamat surel</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">
+                Saluran Sosial &amp; Portofolio Kode
+              </div>
+              <div class="socials-row" id="socialsRow">
+                <!-- Dynamically populated from data-store.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Contact Form -->
+          <form class="contact-form" id="contactForm">
+            <div class="form-group">
+              <label class="form-label" for="clientName">Nama Lengkap Anda</label>
+              <input type="text" id="clientName" name="name" class="form-input" placeholder="Misal: Bagas Pratama" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="clientEmail">Alamat Email</label>
+              <input type="email" id="clientEmail" name="email" class="form-input" placeholder="anda@perusahaan.com" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="clientSubject">Topik / Rencana Proyek</label>
+              <input type="text" id="clientSubject" name="subject" class="form-input" placeholder="Misal: Web App SaaS / Design System Revamp">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="clientMessage">Ceritakan Kebutuhan Anda</label>
+              <textarea id="clientMessage" name="message" class="form-textarea" placeholder="Jelaskan gambaran proyek, target waktu, atau ekspektasi yang ingin dicapai..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="justify-content: center; width: 100%;">
+              <span>Kirim Pesan Diskusi</span>
+              <span>→</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-copy" id="footerCopy">
+        © 2026 Dawnie Pratama. Dirancang dengan estetika atelier &amp; rekayasa web modern.
+      </div>
+      <div class="footer-note" id="footerAvailability">
+        Tersedia untuk proyek terpilih &amp; konsultasi Q2 2026
+      </div>
+    </div>
+  </footer>
+
+  <!-- Native HTML5 Dialog for Project Deep Dive -->
+  <dialog class="case-study-dialog" id="projectDialog">
+    <div class="dialog-header">
+      <img id="dialogHeroImg" class="dialog-hero-img" src="" alt="Cover Proyek">
+      <button type="button" class="dialog-close-btn" id="dialogCloseBtn" aria-label="Tutup Dialog">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div class="dialog-tags" id="dialogTags"></div>
+      <h2 class="dialog-title" id="dialogTitle">Judul Proyek</h2>
+      <div class="dialog-client-line" id="dialogClientLine">Klien • Tahun • Kategori</div>
+
+      <div class="dialog-case-grid">
+        <div class="dialog-case-box">
+          <h4>Tantangan &amp; Masalah</h4>
+          <p id="dialogChallenge">Deskripsi tantangan bisnis dan kendala teknis yang dihadapi sebelum proyek dieksekusi.</p>
+        </div>
+        <div class="dialog-case-box">
+          <h4>Solusi &amp; Pendekatan</h4>
+          <p id="dialogSolution">Strategi desain arsitektur dan eksekusi antarmuka yang diimplementasikan.</p>
+        </div>
+      </div>
+
+      <div class="dialog-impact-box">
+        <h4>Dampak &amp; Hasil Terukur</h4>
+        <p id="dialogImpact">Hasil metrik performa atau peningkatan kepuasan pengguna.</p>
+      </div>
+
+      <div class="dialog-footer-actions">
+        <a href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" id="dialogDemoLink">Kunjungi Demo Langsung ↗</a>
+        <a href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary" id="dialogGithubLink">Lihat Repositori Kode</a>
+      </div>
+    </div>
+  </dialog>
+
+
+
+  <script type="module" src="js/portfolio.js"></script>
+</body>
+</html>
