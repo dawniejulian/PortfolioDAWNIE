@@ -3,7 +3,7 @@
  * Connects with data-store to render all content reactively without touching code.
  */
 
-import { getPortfolioData } from './data-store.js';
+import { getPortfolioData, syncPortfolioDataWithFile } from './data-store.js';
 
 let activeCategory = 'all';
 
@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   renderPortfolio();
   initSecretAdminTrigger();
+
+  // Auto-sync with official repository data for all devices (HP, laptops, visitors)
+  syncPortfolioDataWithFile().then((synced) => {
+    if (synced) renderPortfolio();
+  });
 
   // Listen to live data changes dispatched by Admin Studio or other tabs
   window.addEventListener('dawnie-data-updated', () => {

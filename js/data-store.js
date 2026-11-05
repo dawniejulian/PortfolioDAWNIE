@@ -391,6 +391,39 @@ export function setSessionAuthenticated(auth) {
 }
 
 /**
+ * Automatically synchronizes portfolio data with the official repository file `data/portfolio-data.json`.
+ * Ensures every visitor on any device (HP, desktop, etc.) immediately sees the real portfolio content.
+ */
+export async function syncPortfolioDataWithFile() {
+  try {
+    const res = await fetch('data/portfolio-data.json', { cache: 'no-cache' });
+    if (!res.ok) return null;
+    const fileData = await res.json();
+    if (!fileData || !fileData.profile) return null;
+
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const localData = raw ? JSON.parse(raw) : null;
+
+    // Check if localData is missing, has old placeholder data, or fileData has more/official projects
+    const isOutdated = !localData ||
+      localData.profile?.name === 'Dawnie Pratama' ||
+      !localData.projects ||
+      localData.projects.length < (fileData.projects?.length || 0) ||
+      (fileData.profile?.name && localData.profile?.name !== fileData.profile.name);
+
+    if (isOutdated) {
+      savePortfolioData(fileData);
+      window.dispatchEvent(new CustomEvent('dawnie-data-updated'));
+      return fileData;
+    }
+    return localData;
+  } catch (err) {
+    console.warn('Could not sync portfolio-data.json:', err);
+    return null;
+  }
+}
+
+/**
  * Get current portfolio data from storage, or fallback to defaults
  */
 export function getPortfolioData() {

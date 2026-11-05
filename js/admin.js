@@ -1,5 +1,6 @@
 import {
   getPortfolioData,
+  syncPortfolioDataWithFile,
   savePortfolioData,
   resetPortfolioData,
   exportPortfolioJSON,
@@ -13,8 +14,14 @@ import { mountMediaUploader, mountMultiMediaUploader } from './media-uploader.js
 
 let currentData = null;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   currentData = getPortfolioData();
+
+  // Ensure admin sees official data if local was outdated
+  const synced = await syncPortfolioDataWithFile();
+  if (synced) {
+    currentData = synced;
+  }
 
   // Initialize Security Gate
   initAuthGate();
