@@ -313,6 +313,34 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.8rem;
 }
 
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+  }
+  .nav-inner {
+    height: 68px;
+  }
+  .brand-monogram {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+  .brand-name {
+    font-size: 0.95rem;
+  }
+  .brand-role {
+    font-size: 0.65rem;
+  }
+  .nav-actions .btn-primary {
+    padding: 0.48rem 0.95rem !important;
+    font-size: 0.78rem !important;
+  }
+  .hero-section {
+    padding-top: 100px;
+    padding-bottom: 4rem;
+  }
+}
+
 /* Quick CMS Pill Button */
 .btn-cms-jump {
   display: inline-flex;
@@ -501,6 +529,20 @@ h1, h2, h3, h4, h5, h6 {
   gap: 2rem;
   padding-top: 2rem;
   border-top: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 600px) {
+  .hero-stats {
+    gap: 0.8rem;
+    padding-top: 1.5rem;
+  }
+  .stat-number {
+    font-size: 1.7rem;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
 }
 
 .stat-item {

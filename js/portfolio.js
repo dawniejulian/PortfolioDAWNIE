@@ -184,16 +184,23 @@ function renderProfile(profile) {
   const brandRoleEl = document.getElementById('brandRole');
   const brandMonogramEl = document.getElementById('brandMonogram');
 
-  if (brandNameEl) brandNameEl.textContent = profile.name || 'Dawnie Pratama';
-  if (brandRoleEl) brandRoleEl.textContent = profile.role || 'Fullstack Developer & UI/UX Designer';
+  const displayName = profile.name || 'Dawnie Julian Nugroho';
+  const displayRole = profile.role || 'Fullstack Web Developer & UI/UX Designer';
+
+  if (brandNameEl) brandNameEl.textContent = displayName;
+  if (brandRoleEl) brandRoleEl.textContent = displayRole;
   if (brandMonogramEl) {
-    const initials = (profile.name || 'DP')
+    const initials = displayName
       .split(' ')
-      .map(w => w[0])
+      .filter(Boolean)
+      .map(w => w[0].toUpperCase())
       .slice(0, 2)
       .join('');
-    brandMonogramEl.textContent = initials;
+    brandMonogramEl.textContent = initials || 'DJ';
   }
+
+  // Dynamically update browser tab title
+  document.title = `${displayName} — ${displayRole}`;
 
   // Hero Section
   const statusBadgeText = document.getElementById('statusBadgeText');

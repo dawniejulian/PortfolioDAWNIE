@@ -7,12 +7,12 @@ const STORAGE_KEY = 'dawnie_portfolio_cms_v1';
 
 export const DEFAULT_PORTFOLIO_DATA = {
   profile: {
-    name: "Dawnie Pratama",
+    name: "Dawnie Julian Nugroho",
     role: "Fullstack Web Developer & UI/UX Designer",
-    tagline: "Merancang antarmuka digital bernilai estetika tinggi dengan pondasi rekayasa perangkat lunak yang kokoh & skalabel.",
-    bio: "Halo! Saya seorang developer & desainer yang percaya bahwa perangkat lunak terbaik lahir dari pertemuan antara estetika tipografi yang presisi dan arsitektur kode yang bersih. Berpengalaman lebih dari 5 tahun membangun aplikasi web interaktif, design system terstruktur, hingga ekosistem backend berkinerja tinggi untuk brand lokal dan startup internasional.",
-    statusBadge: "Tersedia untuk Proyek Baru & Kolaborasi (Q2 2026)",
-    location: "Jakarta, Indonesia (Bisa Remote / On-site)",
+    tagline: "Freshgraduate S1 Software Engineering Telkom University Purwokerto",
+    bio: "Fullstack Web Developer & UI/UX Designer berusia 24 tahun dengan pengalaman sebagai Web Developer Intern di Dinkominfo Banyumas dan Game Designer di program MSIB Batch 7 Infinite Learning, PT Kinema Systrans Multimedia. Mahir dalam Laravel, React.js, Node.js/Express.js, dan PostgreSQL, serta berpengalaman bekerja dengan metodologi Agile SDLC. Menggunakan Figma, VS Code, Draw.io, Docker, dan GitHub dalam pekerjaan harian dan kolaborasi tim.",
+    statusBadge: "Open to Work & Collaboration",
+    location: "Purbalingga, Jawa Tengah",
     yearsExperience: "4+",
     completedProjects: "38+ Proyek",
     satisfactionRate: "99.4%",
@@ -32,7 +32,7 @@ export const DEFAULT_PORTFOLIO_DATA = {
     avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
     resumeUrl: "#",
     ctaText: "Mulai Diskusi Proyek",
-    email: "dawnie.pratama@studio.id",
+    email: "dawniejulian@gmail.com",
     phone: "+62 812-3456-7890"
   },
   projectCategories: [
