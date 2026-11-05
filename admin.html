@@ -13,15 +13,15 @@
   <!-- ==============================================================
        SECURITY AUTH GATE / STUDIO VAULT (Protected Lock Screen)
        ============================================================== -->
-  <div class="auth-gate-wrapper" id="authGate">
+  <div class="auth-gate-wrapper" id="authGate" style="display: none;">
     <div class="auth-card" id="authCard">
       <div class="auth-monogram">DP</div>
       <h2 class="auth-title">Atelier Studio CMS</h2>
-      <p class="auth-desc">Akses terproteksi khusus pemilik portofolio. Silakan masukkan kata sandi Anda.</p>
+      <p class="auth-desc">Akses terproteksi pemilik portofolio. (Kata sandi default: <code>dawnie2026</code>)</p>
 
       <form class="auth-form" id="formAuthGate">
         <div class="auth-input-wrap">
-          <input type="password" id="authPasswordInput" class="auth-input" placeholder="Masukkan Kata Sandi..." required autofocus autocomplete="current-password">
+          <input type="password" id="authPasswordInput" class="auth-input" placeholder="Masukkan Kata Sandi..." value="dawnie2026" autofocus autocomplete="current-password">
           <div class="auth-error-msg" id="authErrorMsg">Kata sandi tidak sesuai. Silakan coba lagi.</div>
         </div>
 
@@ -36,8 +36,8 @@
     </div>
   </div>
 
-  <!-- Authenticated Admin Shell (Hidden until authorized) -->
-  <div id="adminApp" style="display: none; width: 100%; min-height: 100vh;">
+  <!-- Authenticated Admin Shell (Open by default) -->
+  <div id="adminApp" style="display: block; width: 100%; min-height: 100vh;">
   <div class="admin-layout">
     <!-- Sidebar Navigation -->
     <aside class="admin-sidebar">
@@ -74,6 +74,9 @@
         </a>
 
         <div class="nav-section-title">Personalisasi &amp; Sistem</div>
+        <a class="sidebar-link" data-tab="tab-layout">
+          <span>👁️</span> <span>Tata Letak &amp; Visibilitas</span>
+        </a>
         <a class="sidebar-link" data-tab="tab-theme">
           <span>🎨</span> <span>Warna &amp; Tema</span>
         </a>
@@ -173,21 +176,6 @@
                 <span class="field-hint">Pilih file gambar langsung dari perangkat Anda atau tempel tautan Google Drive.</span>
               </div>
 
-              <div class="form-grid-3">
-                <div class="form-field">
-                  <label for="profYears">Tahun Pengalaman</label>
-                  <input type="text" id="profYears" name="yearsExperience" placeholder="5+ Tahun">
-                </div>
-                <div class="form-field">
-                  <label for="profCompleted">Karya / Proyek Selesai</label>
-                  <input type="text" id="profCompleted" name="completedProjects" placeholder="38+ Proyek">
-                </div>
-                <div class="form-field">
-                  <label for="profSatisfaction">Tingkat Kepuasan</label>
-                  <input type="text" id="profSatisfaction" name="satisfactionRate" placeholder="99.4%">
-                </div>
-              </div>
-
               <div class="form-grid-2">
                 <div class="form-field">
                   <label for="profLocation">Lokasi &amp; Ketersediaan Kerja</label>
@@ -200,8 +188,61 @@
               </div>
             </div>
 
+            <!-- Hero Stats Editor Card (Screenshot 1) -->
+            <div class="admin-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.8rem;">
+                <div>
+                  <h3 class="admin-card-title" style="margin-bottom: 0.2rem;">Statistik Hero (Angka, Label &amp; Visibilitas)</h3>
+                  <span style="font-size: 0.8rem; color: var(--admin-text-dim);">
+                    Ubah angka (misal: <code>4+</code>, <code>38+ Proyek</code>, <code>99.4%</code>), label (misal: <code>PENGALAMAN INDUSTRI</code>), atau sembunyikan item statistik tertentu.
+                  </span>
+                </div>
+                <button type="button" class="btn-admin" id="btnAddStatItem">
+                  <span>+</span> <span>Tambah Statistik</span>
+                </button>
+              </div>
+
+              <!-- List of editable stats rendered by JS -->
+              <div id="adminHeroStatsList"></div>
+            </div>
+
+            <!-- Hero & Navigation CTA Buttons Card -->
+            <div class="admin-card">
+              <h3 class="admin-card-title">Tombol Aksi Hero &amp; Navigasi (Call to Action)</h3>
+              <p style="font-size: 0.85rem; color: var(--admin-text-muted); margin-bottom: 1.2rem;">
+                Kustomisasi teks dan tautan pada tombol-tombol utama di bagian atas website.
+              </p>
+
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label for="profHeroCtaPrimaryText">Teks Tombol Utama Hero</label>
+                  <input type="text" id="profHeroCtaPrimaryText" placeholder="Mulai Diskusi Proyek">
+                </div>
+                <div class="form-field">
+                  <label for="profHeroCtaPrimaryUrl">Tautan Tombol Utama (URL / ID)</label>
+                  <input type="text" id="profHeroCtaPrimaryUrl" placeholder="#contact">
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label for="profHeroCtaSecondaryText">Teks Tombol Sekunder Hero</label>
+                  <input type="text" id="profHeroCtaSecondaryText" placeholder="Jelajahi Karya Terpilih ↓">
+                </div>
+                <div class="form-field">
+                  <label for="profHeroCtaSecondaryUrl">Tautan Tombol Sekunder (URL / ID)</label>
+                  <input type="text" id="profHeroCtaSecondaryUrl" placeholder="#projects">
+                </div>
+              </div>
+
+              <div class="form-field" style="max-width: 400px;">
+                <label for="profNavCtaText">Teks Tombol di Navbar Atas</label>
+                <input type="text" id="profNavCtaText" placeholder="Diskusi Proyek">
+              </div>
+            </div>
+
             <button type="submit" class="btn-admin btn-admin-primary">
-              <span>💾</span> <span>Simpan Profil</span>
+              <span>💾</span> <span>Simpan Profil &amp; Hero</span>
             </button>
           </form>
         </section>
@@ -218,6 +259,72 @@
             <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddProjectModal">
               <span>+</span> <span>Tambah Proyek Baru</span>
             </button>
+          </div>
+
+          <!-- Quick Section Header & Visibility Card for Projects -->
+          <div class="section-header-config-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.8rem;">
+              <h3 style="font-size: 1rem; color: var(--admin-accent); font-weight: 600; margin: 0;">
+                💼 Judul &amp; Visibilitas Bagian "Karya Terpilih"
+              </h3>
+              <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <span style="font-size: 0.8rem; color: var(--admin-text-dim);">Tampilkan di Website:</span>
+                <label class="switch-toggle">
+                  <input type="checkbox" id="quickToggleProjects" checked>
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-field">
+                <label for="projectsQuickLabel">Label Kicker (Teks Kecil di Atas Judul)</label>
+                <input type="text" id="projectsQuickLabel" placeholder="Karya Terpilih">
+              </div>
+              <div class="form-field">
+                <label for="projectsQuickTitle">Judul Utama (*_teks_ untuk miring*)</label>
+                <input type="text" id="projectsQuickTitle" placeholder="Eksplorasi proyek nyata dengan _dampak terukur_">
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="projectsQuickSubtitle">Subtitle Deskripsi</label>
+              <textarea id="projectsQuickSubtitle" rows="2" placeholder="Klik pada setiap proyek untuk membaca..."></textarea>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnSaveProjectsHeaderQuick" style="margin-top: 0.5rem;">
+              <span>💾</span> <span>Simpan Judul Bagian Proyek</span>
+            </button>
+          </div>
+
+          <!-- Project Categories Management Card (Filter Tabs) -->
+          <div class="admin-card" style="margin-bottom: 1.8rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.8rem;">
+              <div>
+                <h3 class="admin-card-title" style="margin-bottom: 0.2rem;">Kategori Filter Proyek (Tombol Filter Bar)</h3>
+                <span style="font-size: 0.8rem; color: var(--admin-text-dim);">
+                  Kategori ini menjadi tombol tab filter di halaman portofolio dan pilihan kategori saat membuat/mengedit proyek.
+                </span>
+              </div>
+            </div>
+
+            <!-- List of categories -->
+            <div id="adminProjectCategoriesList" style="margin-bottom: 1.2rem;"></div>
+
+            <!-- Add new category inline form -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px dashed var(--admin-border); border-radius: var(--radius-sm); padding: 1.2rem;">
+              <h4 style="font-size: 0.88rem; color: var(--admin-text-main); margin-bottom: 0.8rem;">+ Tambah Kategori Filter Baru</h4>
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label for="newCatLabel">Nama Kategori (Label Tampilan)</label>
+                  <input type="text" id="newCatLabel" placeholder="Misal: Mobile &amp; iOS">
+                </div>
+                <div class="form-field">
+                  <label for="newCatId">Kode ID / Slug (Huruf kecil tanpa spasi)</label>
+                  <input type="text" id="newCatId" placeholder="Misal: mobile">
+                </div>
+              </div>
+              <button type="button" class="btn-admin btn-admin-primary" id="btnAddCategoryBtn" style="margin-top: 0.5rem;">
+                <span>+</span> <span>Tambah Kategori Baru</span>
+              </button>
+            </div>
           </div>
 
           <div class="items-list" id="adminProjectsList">
@@ -301,6 +408,50 @@
             </div>
             <button type="button" class="btn-admin btn-admin-primary" id="btnOpenAddTestiModal">
               <span>+</span> <span>Tambah Ulasan Baru</span>
+            </button>
+          </div>
+
+          <div class="admin-card" style="margin-bottom: 1.5rem; padding: 1.25rem 1.6rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <strong style="font-size: 0.95rem; color: var(--admin-text-main); display: block; margin-bottom: 0.2rem;">
+                  Visibilitas Bagian "Kata Mereka" (Ulasan Klien)
+                </strong>
+                <span style="font-size: 0.8rem; color: var(--admin-text-dim);">
+                  Nonaktifkan jika Anda ingin menyembunyikan seluruh bagian ulasan ini beserta link menunya di navigasi web.
+                </span>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="quickToggleTestimonials" checked>
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Section Header Config for Testimonials (Screenshot 2) -->
+          <div class="section-header-config-card">
+            <h3 style="font-size: 1rem; color: var(--admin-accent); font-weight: 600; margin-bottom: 0.8rem;">
+              💬 Edit Judul &amp; Deskripsi "Kata Mereka"
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--admin-text-muted); margin-bottom: 1.2rem;">
+              Ubah teks label kecil, judul utama, dan paragraf pengantar section ulasan ini.
+            </p>
+            <div class="form-grid-2">
+              <div class="form-field">
+                <label for="testiQuickLabel">Label Kicker (Teks Kecil di Atas Judul)</label>
+                <input type="text" id="testiQuickLabel" placeholder="Kata Mereka">
+              </div>
+              <div class="form-field">
+                <label for="testiQuickTitle">Judul Utama (*_teks_ untuk miring*)</label>
+                <input type="text" id="testiQuickTitle" placeholder="Kolaborasi yang berakar pada kepercayaan &amp; kualitas">
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="testiQuickSubtitle">Subtitle Deskripsi</label>
+              <textarea id="testiQuickSubtitle" rows="2" placeholder="Apa yang dikatakan oleh para pendiri perusahaan, rekan engineer, dan klien..."></textarea>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnSaveTestimonialsHeaderQuick" style="margin-top: 0.5rem;">
+              <span>💾</span> <span>Simpan Judul "Kata Mereka"</span>
             </button>
           </div>
 
@@ -423,7 +574,62 @@
         </section>
 
         <!-- ==========================================
-             TAB 9: BACKUP & DATA JSON
+             TAB: TATA LETAK & VISIBILITAS
+             ========================================== -->
+        <section id="tab-layout" class="tab-pane">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Tata Letak &amp; Visibilitas Elemen</h2>
+              <p class="panel-desc">Kontrol penuh untuk menampilkan, menyembunyikan, atau mengubah teks menu, tombol, dan seluruh bagian di web portofolio tanpa koding.</p>
+            </div>
+            <button type="button" class="btn-admin btn-admin-primary" id="btnSaveLayoutSettings">
+              <span>💾</span> <span>Simpan Pengaturan Tata Letak</span>
+            </button>
+          </div>
+
+          <!-- 1. SAKLAR VISIBILITAS BAGIAN UTAMA -->
+          <div class="admin-card">
+            <h3 class="admin-card-title">
+              <span>Visibilitas Bagian Utama (Section Toggles)</span>
+              <span style="font-size: 0.75rem; color: var(--admin-text-dim); font-weight: normal;">Nonaktifkan jika tidak ingin ditampilkan</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--admin-text-muted); margin-bottom: 1.5rem;">
+              Menonaktifkan bagian otomatis akan menyembunyikan konten dari halaman portofolio <strong>dan menghilangkan tautan menunya di navigasi atas</strong>.
+            </p>
+            <div class="switches-grid" id="layoutSectionsGrid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- 2. SAKLAR TOMBOL & ELEMEN MIKRO -->
+          <div class="admin-card">
+            <h3 class="admin-card-title">
+              <span>Visibilitas Tombol &amp; Komponen Interaktif</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--admin-text-muted); margin-bottom: 1.5rem;">
+              Sembunyikan tombol atau kartu tertentu yang Anda rasa belum diperlukan saat ini.
+            </p>
+            <div class="switches-grid" id="layoutComponentsGrid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- 3. KUSTOMISASI JUDUL & SUBTITLE SETIAP BAGIAN -->
+          <div class="admin-card">
+            <h3 class="admin-card-title">
+              <span>Kustomisasi Judul, Label &amp; Subtitle Bagian</span>
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--admin-text-muted); margin-bottom: 1.5rem;">
+              Ubah teks judul utama (*Gunakan _kata_ untuk cetak miring elegan*).
+            </p>
+            <div id="layoutHeadingsList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             TAB: BACKUP & DATA JSON
              ========================================== -->
         <section id="tab-backup" class="tab-pane">
           <div class="panel-header">

@@ -68,7 +68,7 @@ Anda tidak perlu lagi mencari URL gambar eksternal yang rumit:
 
 ---
 
-## 🚀 Cara Menjalankan Portofolio
+## 🚀 Cara Menjalankan Portofolio Lokal
 
 Buka terminal pada direktori proyek:
 
@@ -82,4 +82,49 @@ npx serve . -p 4173
 
 Buka peramban di:
 - **Portofolio Publik**: `http://localhost:4173/`
-- **Dashboard CMS Studio**: `http://localhost:4173/admin.html`
+- **Dashboard CMS Studio**: `http://localhost:4173/admin` (atau `/admin.html`)
+
+---
+
+## ☁️ Panduan Deploy ke Vercel (Gratis & Cepat)
+
+Proyek ini telah dikonfigurasi dengan file `vercel.json` sehingga langsung siap di-hosting ke **Vercel** dengan URL bersih (`/admin` tanpa `.html`) dan keamanan optimal.
+
+### Metode A: Lewat GitHub (Sangat Direkomendasikan)
+1. **Buat repositori baru di GitHub** (bisa diset Publik atau Privat):
+   ```bash
+   git add .
+   git commit -m "feat: prepare portfolio for Vercel deployment"
+   git branch -M main
+   git remote add origin https://github.com/USERNAME_ANDA/NAMA_REPO.git
+   git push -u origin main
+   ```
+2. Buka [vercel.com](https://vercel.com) dan login dengan akun GitHub Anda.
+3. Klik tombol **"Add New..."** lalu pilih **"Project"**.
+4. Pilih repositori GitHub Anda dan klik **"Import"**.
+5. Pada pengaturan proyek:
+   - **Framework Preset**: Pilih `Other` (otomatis terdeteksi).
+   - **Root Directory**: `./` (default).
+   - **Build & Output Settings**: Biarkan kosong/default.
+6. Klik **"Deploy"**. Dalam 15-30 detik website Anda akan langsung online dengan domain gratis seperti `https://nama-proyek.vercel.app`!
+
+### Metode B: Deploy Langsung via Terminal (Vercel CLI)
+Jika Anda tidak ingin upload ke GitHub terlebih dahulu, Anda bisa langsung deploy dari terminal:
+```bash
+npx vercel
+```
+1. Tekan `Enter` untuk login ke akun Vercel melalui peramban.
+2. Jawab pertanyaan yang muncul:
+   - *Set up and deploy?* -> `Y`
+   - *Which scope?* -> (Pilih akun Vercel Anda)
+   - *Link to existing project?* -> `N`
+   - *What's your project's name?* -> (Ketik nama proyek, misal `dawnie-portfolio`)
+   - *In which directory is your code located?* -> `./`
+3. Selesai! Vercel akan langsung memberikan link pratinjau dan link produksi.
+4. Untuk update berikutnya, cukup ketik `npx vercel --prod`.
+
+### 💡 Tips Penting Penggunaan CMS di Vercel
+- **Akses CMS**: Anda bisa mengakses dashboard CMS di `https://domain-anda.vercel.app/admin`.
+- **Pintasan Rahasia**: Tetap dapat menggunakan `Ctrl + Shift + A` (atau `Cmd + Shift + A`) atau klik 3x logo monogram `DP`.
+- **Pencadangan Data**: Gunakan menu **"Unduh Cadangan JSON"** di tab Pengaturan CMS sewaktu-waktu Anda ingin mencadangkan atau memindahkan konten ke perangkat lain.
+

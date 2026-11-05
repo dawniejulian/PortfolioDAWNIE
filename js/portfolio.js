@@ -63,13 +63,96 @@ export function renderPortfolio() {
   const data = getPortfolioData();
 
   applyThemeSettings(data.theme);
+  renderLayoutAndVisibility(data.layout);
   renderProfile(data.profile);
   renderServices(data.services);
-  renderProjects(data.projects);
+  renderProjects(data.projects, data.projectCategories);
   renderSkills(data.skills);
   renderExperiences(data.experiences);
   renderTestimonials(data.testimonials);
   renderSocialsAndContact(data.profile, data.socialLinks, data.contactSettings);
+}
+
+/**
+ * Apply layout toggles, component visibility, and customized section headings
+ */
+function renderLayoutAndVisibility(layout) {
+  if (!layout) return;
+
+  // 1. Master Section Visibility & Nav Sync
+  const sections = layout.sections || {};
+  const sectionKeys = ['hero', 'services', 'projects', 'skills', 'experience', 'testimonials', 'contact'];
+
+  sectionKeys.forEach(key => {
+    const isVisible = sections[key] !== false;
+    const secEl = document.getElementById(key);
+    if (secEl) {
+      secEl.style.display = isVisible ? '' : 'none';
+    }
+    // Automatically hide/show corresponding nav menu link
+    const navItem = document.querySelector(`li[data-nav-for="${key}"]`);
+    if (navItem) {
+      navItem.style.display = isVisible ? '' : 'none';
+    }
+  });
+
+  // 2. Button & Micro-Component Visibility
+  const comps = layout.components || {};
+
+  const toggleElement = (id, visible) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = visible !== false ? '' : 'none';
+  };
+
+  toggleElement('statusBadge', comps.statusBadge);
+  toggleElement('heroTagline', comps.heroTagline);
+  toggleElement('heroBio', comps.heroBio);
+  toggleElement('heroCtaBtn', comps.heroCtaPrimary);
+  toggleElement('heroSecondaryCta', comps.heroCtaSecondary);
+  toggleElement('heroStatsContainer', comps.heroStats);
+  toggleElement('heroVisualCol', comps.heroVisualCard);
+  toggleElement('navCtaBtn', comps.navCtaBtn);
+  toggleElement('themeToggleBtn', comps.themeToggle);
+  toggleElement('contactForm', comps.contactForm);
+  toggleElement('contactDirectCard', comps.directEmailCard);
+
+  // 3. Section Headings (Label, Title, Subtitle)
+  const headings = layout.headings || {};
+
+  const formatHeadingHTML = (str) => {
+    if (!str) return '';
+    return escapeHTML(str)
+      .replace(/&lt;em&gt;/gi, '<em>')
+      .replace(/&lt;\/em&gt;/gi, '</em>')
+      .replace(/&lt;span class=&quot;highlight&quot;&gt;/gi, '<span class="highlight">')
+      .replace(/&lt;\/span&gt;/gi, '</span>')
+      .replace(/_([^_]+)_/g, '<em>$1</em>')
+      .replace(/\*([^*]+)\*/g, '<span class="highlight">$1</span>');
+  };
+
+  const updateHeading = (key) => {
+    const h = headings[key];
+    if (!h) return;
+    const labelEl = document.getElementById(`${key}SectionLabel`);
+    const titleEl = document.getElementById(`${key}SectionTitle`);
+    const subEl = document.getElementById(`${key}SectionSubtitle`);
+
+    if (labelEl && h.label !== undefined) labelEl.textContent = h.label;
+    if (titleEl && h.title !== undefined) titleEl.innerHTML = formatHeadingHTML(h.title);
+    if (subEl && h.subtitle !== undefined) subEl.textContent = h.subtitle;
+  };
+
+  ['services', 'projects', 'skills', 'experience', 'testimonials'].forEach(updateHeading);
+
+  // Contact section headings
+  if (headings.contact) {
+    const cLabel = document.getElementById('contactSectionLabel');
+    const cTitle = document.getElementById('contactHeading');
+    const cSub = document.getElementById('contactSubheading');
+    if (cLabel && headings.contact.label !== undefined) cLabel.textContent = headings.contact.label;
+    if (cTitle && headings.contact.title !== undefined) cTitle.innerHTML = formatHeadingHTML(headings.contact.title);
+    if (cSub && headings.contact.subtitle !== undefined) cSub.textContent = headings.contact.subtitle;
+  }
 }
 
 /**
@@ -119,24 +202,57 @@ function renderProfile(profile) {
   const heroBioEl = document.getElementById('heroBio');
   const heroAvatar = document.getElementById('heroAvatar');
   const heroLocation = document.getElementById('heroLocation');
-  const heroCtaBtn = document.getElementById('heroCtaBtn');
 
-  if (statusBadgeText) statusBadgeText.textContent = profile.statusBadge;
+  if (statusBadgeText) statusBadgeText.textContent = profile.statusBadge || '';
   if (heroRoleEl) heroRoleEl.innerHTML = formatHeroRole(profile.role);
-  if (heroTaglineEl) heroTaglineEl.textContent = profile.tagline;
-  if (heroBioEl) heroBioEl.textContent = profile.bio;
+  if (heroTaglineEl) {
+    heroTaglineEl.textContent = profile.tagline || '';
+    if (!profile.tagline) heroTaglineEl.style.display = 'none';
+  }
+  if (heroBioEl) {
+    heroBioEl.textContent = profile.bio || '';
+    if (!profile.bio) heroBioEl.style.display = 'none';
+  }
   if (heroAvatar && profile.avatarUrl) heroAvatar.src = profile.avatarUrl;
-  if (heroLocation) heroLocation.textContent = profile.location;
-  if (heroCtaBtn) heroCtaBtn.textContent = profile.ctaText || 'Mulai Diskusi Proyek';
+  if (heroLocation) heroLocation.textContent = profile.location || '';
 
-  // Stats
-  const statYears = document.getElementById('statYears');
-  const statProjects = document.getElementById('statProjects');
-  const statSatisfaction = document.getElementById('statSatisfaction');
+  // Hero CTA Buttons & Navigation CTA
+  const heroCtaBtn = document.getElementById('heroCtaBtn');
+  const heroSecondaryCta = document.getElementById('heroSecondaryCta');
+  const navCtaBtn = document.getElementById('navCtaBtn');
 
-  if (statYears) statYears.innerHTML = `${profile.yearsExperience}`;
-  if (statProjects) statProjects.innerHTML = `${profile.completedProjects}`;
-  if (statSatisfaction) statSatisfaction.innerHTML = `${profile.satisfactionRate}`;
+  if (heroCtaBtn) {
+    if (profile.heroCta?.primaryText) heroCtaBtn.textContent = profile.heroCta.primaryText;
+    else if (profile.ctaText) heroCtaBtn.textContent = profile.ctaText;
+    if (profile.heroCta?.primaryUrl) heroCtaBtn.href = profile.heroCta.primaryUrl;
+  }
+  if (heroSecondaryCta && profile.heroCta) {
+    if (profile.heroCta.secondaryText) heroSecondaryCta.textContent = profile.heroCta.secondaryText;
+    if (profile.heroCta.secondaryUrl) heroSecondaryCta.href = profile.heroCta.secondaryUrl;
+  }
+  if (navCtaBtn && profile.navCtaText) {
+    navCtaBtn.textContent = profile.navCtaText;
+  }
+
+  // Dynamic Hero Stats (Numbers, Labels & Visibility)
+  const statsContainer = document.getElementById('heroStatsContainer');
+  if (statsContainer) {
+    const statsList = Array.isArray(profile.stats) && profile.stats.length > 0
+      ? profile.stats
+      : [
+          { id: "stat-1", number: profile.yearsExperience || "4+", label: "Pengalaman Industri", visible: true },
+          { id: "stat-2", number: profile.completedProjects || "38+ Proyek", label: "Proyek Terselesaikan", visible: true },
+          { id: "stat-3", number: profile.satisfactionRate || "99.4%", label: "Kepuasan Klien", visible: true }
+        ];
+
+    const visibleStats = statsList.filter(s => s.visible !== false);
+    statsContainer.innerHTML = visibleStats.map(stat => `
+      <div class="stat-item" id="${escapeHTML(stat.id || '')}">
+        <div class="stat-number">${escapeHTML(stat.number || '')}</div>
+        <div class="stat-label">${escapeHTML(stat.label || '')}</div>
+      </div>
+    `).join('');
+  }
 }
 
 function formatHeroRole(roleText) {
@@ -172,23 +288,25 @@ function renderServices(services) {
 /**
  * Render Projects Showcase with Filtering & Dialog Details
  */
-function renderProjects(projects) {
+function renderProjects(projects, categories) {
   const container = document.getElementById('projectsContainer');
   const filterContainer = document.getElementById('projectsFilter');
   if (!container || !projects) return;
 
+  const activeCategories = Array.isArray(categories) && categories.length > 0
+    ? categories
+    : [
+        { id: 'all', label: 'Semua Karya' },
+        { id: 'fullstack', label: 'Fullstack & Web' },
+        { id: 'saas', label: 'Product & SaaS' },
+        { id: 'creative', label: 'Creative & Audio' }
+      ];
+
   // Filter Buttons
   if (filterContainer) {
-    const categories = [
-      { id: 'all', label: 'Semua Karya' },
-      { id: 'fullstack', label: 'Fullstack & Web' },
-      { id: 'saas', label: 'Product & SaaS' },
-      { id: 'creative', label: 'Creative & Audio' }
-    ];
-
-    filterContainer.innerHTML = categories.map(cat => `
-      <button class="filter-btn ${activeCategory === cat.id ? 'active' : ''}" data-filter="${cat.id}">
-        ${cat.label}
+    filterContainer.innerHTML = activeCategories.map(cat => `
+      <button class="filter-btn ${activeCategory === cat.id ? 'active' : ''}" data-filter="${escapeHTML(cat.id)}">
+        ${escapeHTML(cat.label)}
       </button>
     `).join('');
 
@@ -197,7 +315,7 @@ function renderProjects(projects) {
         activeCategory = e.currentTarget.getAttribute('data-filter');
         filterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         e.currentTarget.classList.add('active');
-        renderProjects(projects);
+        renderProjects(projects, activeCategories);
       });
     });
   }
@@ -205,7 +323,7 @@ function renderProjects(projects) {
   // Filtered List
   const filtered = activeCategory === 'all'
     ? projects
-    : projects.filter(p => p.categoryFilter === activeCategory || (p.category && p.category.toLowerCase().includes(activeCategory)));
+    : projects.filter(p => p.categoryFilter === activeCategory || (p.category && p.category.toLowerCase().includes(activeCategory.toLowerCase())));
 
   container.innerHTML = filtered.map(proj => `
     <div class="project-card" data-project-id="${proj.id}">
@@ -247,12 +365,18 @@ function openProjectModal(project) {
   const heroImg = document.getElementById('dialogHeroImg');
   const title = document.getElementById('dialogTitle');
   const clientLine = document.getElementById('dialogClientLine');
+  const desc = document.getElementById('dialogDesc');
   const tagsRow = document.getElementById('dialogTags');
+  const caseGrid = document.getElementById('dialogCaseGrid');
+  const challengeBox = document.getElementById('dialogChallengeBox');
   const challenge = document.getElementById('dialogChallenge');
+  const solutionBox = document.getElementById('dialogSolutionBox');
   const solution = document.getElementById('dialogSolution');
+  const impactBox = document.getElementById('dialogImpactBox');
   const impact = document.getElementById('dialogImpact');
   const demoLink = document.getElementById('dialogDemoLink');
   const githubLink = document.getElementById('dialogGithubLink');
+  const footerActions = document.getElementById('dialogFooterActions');
 
   const prevBtn = document.getElementById('dialogPrevImgBtn');
   const nextBtn = document.getElementById('dialogNextImgBtn');
@@ -267,7 +391,14 @@ function openProjectModal(project) {
   let activeImgIndex = 0;
 
   function setModalImage(idx) {
-    if (!gallery.length) return;
+    if (!gallery.length) {
+      if (heroImg) {
+        heroImg.src = '';
+        heroImg.style.display = 'none';
+      }
+      return;
+    }
+    if (heroImg) heroImg.style.display = 'block';
     activeImgIndex = (idx + gallery.length) % gallery.length;
     if (heroImg) heroImg.src = gallery[activeImgIndex];
 
@@ -325,31 +456,112 @@ function openProjectModal(project) {
 
   setModalImage(0);
 
-  if (title) title.textContent = project.title;
-  if (clientLine) clientLine.textContent = `${project.client} • Tahun ${project.year || '2025'} • ${project.category}`;
-  if (tagsRow) {
-    tagsRow.innerHTML = (project.tags || []).map(t => `<span class="tag-pill">${escapeHTML(t)}</span>`).join('');
-  }
-  if (challenge) challenge.textContent = project.challenge || project.shortDescription;
-  if (solution) solution.textContent = project.solution || 'Pendekatan berfokus pada arsitektur modular dan estetika yang konsisten.';
-  if (impact) impact.textContent = project.impact || 'Meningkatkan kepuasan pengguna dan performa sistem.';
+  // Judul Proyek
+  if (title) title.textContent = project.title || 'Proyek Tanpa Judul';
 
+  // Info Klien / Inisiator, Tahun, Kategori
+  if (clientLine) {
+    const metaParts = [];
+    if (project.client && project.client.trim()) metaParts.push(project.client.trim());
+    if (project.year && String(project.year).trim()) metaParts.push(`Tahun ${String(project.year).trim()}`);
+    if (project.category && project.category.trim()) metaParts.push(project.category.trim());
+
+    if (metaParts.length > 0) {
+      clientLine.textContent = metaParts.join(' • ');
+      clientLine.style.display = 'block';
+    } else {
+      clientLine.textContent = '';
+      clientLine.style.display = 'none';
+    }
+  }
+
+  // Deskripsi Ringkas / Utama Proyek
+  const shortDesc = (project.shortDescription || '').trim();
+  if (desc) {
+    if (shortDesc) {
+      desc.textContent = shortDesc;
+      desc.style.display = 'block';
+    } else {
+      desc.textContent = '';
+      desc.style.display = 'none';
+    }
+  }
+
+  // Tags Teknologi
+  const tags = Array.isArray(project.tags)
+    ? project.tags.map(t => (typeof t === 'string' ? t.trim() : '')).filter(Boolean)
+    : [];
+  if (tagsRow) {
+    if (tags.length > 0) {
+      tagsRow.innerHTML = tags.map(t => `<span class="tag-pill">${escapeHTML(t)}</span>`).join('');
+      tagsRow.style.display = 'flex';
+    } else {
+      tagsRow.innerHTML = '';
+      tagsRow.style.display = 'none';
+    }
+  }
+
+  // Tantangan & Solusi (Case Grid)
+  const challengeText = (project.challenge || '').trim();
+  const solutionText = (project.solution || '').trim();
+  const hasChallenge = Boolean(challengeText);
+  const hasSolution = Boolean(solutionText);
+
+  if (challenge) challenge.textContent = challengeText;
+  if (challengeBox) challengeBox.style.display = hasChallenge ? 'block' : 'none';
+
+  if (solution) solution.textContent = solutionText;
+  if (solutionBox) solutionBox.style.display = hasSolution ? 'block' : 'none';
+
+  if (caseGrid) {
+    if (!hasChallenge && !hasSolution) {
+      caseGrid.style.display = 'none';
+    } else {
+      caseGrid.style.display = 'grid';
+      if (hasChallenge && hasSolution) {
+        caseGrid.style.gridTemplateColumns = '';
+      } else {
+        caseGrid.style.gridTemplateColumns = '1fr';
+      }
+    }
+  }
+
+  // Dampak & Hasil Terukur
+  const impactText = (project.impact || '').trim();
+  const hasImpact = Boolean(impactText);
+
+  if (impact) impact.textContent = impactText;
+  if (impactBox) {
+    impactBox.style.display = hasImpact ? 'block' : 'none';
+  }
+
+  // Link Demo & GitHub Repositori
+  const demoUrl = (project.demoUrl || '').trim();
+  const hasDemo = demoUrl && demoUrl !== '#';
   if (demoLink) {
-    if (project.demoUrl && project.demoUrl !== '#') {
-      demoLink.href = project.demoUrl;
+    if (hasDemo) {
+      demoLink.href = demoUrl;
       demoLink.style.display = 'inline-flex';
     } else {
       demoLink.style.display = 'none';
+      demoLink.removeAttribute('href');
     }
   }
 
+  const githubUrl = (project.githubUrl || '').trim();
+  const hasGithub = githubUrl && githubUrl !== '#';
   if (githubLink) {
-    if (project.githubUrl && project.githubUrl !== '#') {
-      githubLink.href = project.githubUrl;
+    if (hasGithub) {
+      githubLink.href = githubUrl;
       githubLink.style.display = 'inline-flex';
     } else {
       githubLink.style.display = 'none';
+      githubLink.removeAttribute('href');
     }
+  }
+
+  if (footerActions) {
+    footerActions.style.display = 'flex';
   }
 
   dialog.scrollTop = 0;

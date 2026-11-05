@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTestimonialsTab();
   initSocialsTab();
   initThemeTab();
+  initLayoutTab();
   initSecurityTab();
   initBackupTab();
   initGlobalActions();
@@ -184,11 +185,15 @@ function initProfileTab() {
   setVal('profTagline', prof.tagline);
   setVal('profBio', prof.bio);
   setVal('profAvatarUrl', prof.avatarUrl);
-  setVal('profYears', prof.yearsExperience);
-  setVal('profCompleted', prof.completedProjects);
-  setVal('profSatisfaction', prof.satisfactionRate);
   setVal('profLocation', prof.location);
   setVal('profEmail', prof.email);
+
+  // Hero CTA Buttons
+  setVal('profHeroCtaPrimaryText', prof.heroCta?.primaryText || prof.ctaText || 'Mulai Diskusi Proyek');
+  setVal('profHeroCtaPrimaryUrl', prof.heroCta?.primaryUrl || '#contact');
+  setVal('profHeroCtaSecondaryText', prof.heroCta?.secondaryText || 'Jelajahi Karya Terpilih ↓');
+  setVal('profHeroCtaSecondaryUrl', prof.heroCta?.secondaryUrl || '#projects');
+  setVal('profNavCtaText', prof.navCtaText || 'Diskusi Proyek');
 
   // Initialize Media Uploader for Avatar (Device & GDrive)
   mountMediaUploader({
@@ -198,9 +203,115 @@ function initProfileTab() {
     initialValue: prof.avatarUrl || ''
   });
 
+  // Ensure prof.stats exists
+  if (!Array.isArray(prof.stats) || prof.stats.length === 0) {
+    prof.stats = [
+      { id: "stat-1", number: prof.yearsExperience || "4+", label: "Pengalaman Industri", visible: true },
+      { id: "stat-2", number: prof.completedProjects || "38+ Proyek", label: "Proyek Terselesaikan", visible: true },
+      { id: "stat-3", number: prof.satisfactionRate || "99.4%", label: "Kepuasan Klien", visible: true }
+    ];
+  }
+
+  const renderAdminStatsList = () => {
+    const container = document.getElementById('adminHeroStatsList');
+    if (!container) return;
+
+    if (prof.stats.length === 0) {
+      container.innerHTML = '<div style="color: var(--admin-text-muted); font-size: 0.85rem; padding: 1rem; text-align: center;">Belum ada statistik. Klik "+ Tambah Statistik" di atas.</div>';
+      return;
+    }
+
+    container.innerHTML = prof.stats.map((stat, idx) => `
+      <div class="stat-row-card" data-idx="${idx}">
+        <div class="form-field" style="margin-bottom: 0;">
+          <label style="font-size: 0.72rem; color: var(--admin-text-dim); margin-bottom: 0.2rem;">Angka / Nilai</label>
+          <input type="text" class="stat-num-input" value="${escapeHTML(stat.number || '')}" placeholder="4+">
+        </div>
+        <div class="form-field" style="margin-bottom: 0;">
+          <label style="font-size: 0.72rem; color: var(--admin-text-dim); margin-bottom: 0.2rem;">Keterangan / Label</label>
+          <input type="text" class="stat-lbl-input" value="${escapeHTML(stat.label || '')}" placeholder="PENGALAMAN INDUSTRI">
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+          <span style="font-size: 0.7rem; color: var(--admin-text-dim); font-family: var(--font-mono);">
+            ${stat.visible !== false ? 'Aktif' : 'Hidden'}
+          </span>
+          <label class="switch-toggle">
+            <input type="checkbox" class="stat-vis-input" ${stat.visible !== false ? 'checked' : ''}>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+        <div>
+          <button type="button" class="btn-item-action btn-item-delete btn-delete-stat" title="Hapus Statistik">
+            🗑️
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach listeners
+    container.querySelectorAll('.stat-row-card').forEach(row => {
+      const idx = parseInt(row.getAttribute('data-idx'), 10);
+      const numInput = row.querySelector('.stat-num-input');
+      const lblInput = row.querySelector('.stat-lbl-input');
+      const visInput = row.querySelector('.stat-vis-input');
+      const btnDel = row.querySelector('.btn-delete-stat');
+
+      if (numInput) {
+        numInput.addEventListener('input', (e) => {
+          prof.stats[idx].number = e.target.value;
+        });
+      }
+      if (lblInput) {
+        lblInput.addEventListener('input', (e) => {
+          prof.stats[idx].label = e.target.value;
+        });
+      }
+      if (visInput) {
+        visInput.addEventListener('change', (e) => {
+          prof.stats[idx].visible = e.target.checked;
+          const statusText = row.querySelector('span[style*="font-family"]');
+          if (statusText) statusText.textContent = e.target.checked ? 'Aktif' : 'Hidden';
+        });
+      }
+      if (btnDel) {
+        btnDel.addEventListener('click', () => {
+          if (confirm('Hapus item statistik ini?')) {
+            prof.stats.splice(idx, 1);
+            renderAdminStatsList();
+          }
+        });
+      }
+    });
+  };
+
+  renderAdminStatsList();
+
+  const btnAddStat = document.getElementById('btnAddStatItem');
+  if (btnAddStat) {
+    btnAddStat.onclick = () => {
+      prof.stats.push({
+        id: 'stat-' + Date.now(),
+        number: '10+',
+        label: 'Statistik Baru',
+        visible: true
+      });
+      renderAdminStatsList();
+    };
+  }
+
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+
+      const heroCtaPayload = {
+        primaryText: document.getElementById('profHeroCtaPrimaryText')?.value.trim() || 'Mulai Diskusi Proyek',
+        primaryUrl: document.getElementById('profHeroCtaPrimaryUrl')?.value.trim() || '#contact',
+        primaryVisible: true,
+        secondaryText: document.getElementById('profHeroCtaSecondaryText')?.value.trim() || 'Jelajahi Karya Terpilih ↓',
+        secondaryUrl: document.getElementById('profHeroCtaSecondaryUrl')?.value.trim() || '#projects',
+        secondaryVisible: true
+      };
+
       currentData.profile = {
         ...currentData.profile,
         name: document.getElementById('profName').value,
@@ -209,15 +320,20 @@ function initProfileTab() {
         tagline: document.getElementById('profTagline').value,
         bio: document.getElementById('profBio').value,
         avatarUrl: document.getElementById('profAvatarUrl').value,
-        yearsExperience: document.getElementById('profYears').value,
-        completedProjects: document.getElementById('profCompleted').value,
-        satisfactionRate: document.getElementById('profSatisfaction').value,
         location: document.getElementById('profLocation').value,
-        email: document.getElementById('profEmail').value
+        email: document.getElementById('profEmail').value,
+        heroCta: heroCtaPayload,
+        ctaText: heroCtaPayload.primaryText,
+        navCtaText: document.getElementById('profNavCtaText')?.value.trim() || 'Diskusi Proyek',
+        stats: prof.stats,
+        // Backward compatibility sync
+        yearsExperience: prof.stats[0]?.number || currentData.profile?.yearsExperience || '4+',
+        completedProjects: prof.stats[1]?.number || currentData.profile?.completedProjects || '38+ Proyek',
+        satisfactionRate: prof.stats[2]?.number || currentData.profile?.satisfactionRate || '99.4%'
       };
 
       savePortfolioData(currentData);
-      showAdminToast('Data Profil & Hero berhasil disimpan!');
+      showAdminToast('Data Profil, Hero & Statistik berhasil disimpan!');
     });
   }
 }
@@ -235,13 +351,23 @@ function openProjectModal(project = null) {
 
   form.reset();
 
+  // Dynamically populate categoryFilter options from active projectCategories
+  const filterSelect = document.getElementById('projFormCategoryFilter');
+  const cats = (currentData.projectCategories || DEFAULT_PORTFOLIO_DATA.projectCategories)
+    .filter(c => c.id !== 'all');
+  if (filterSelect) {
+    filterSelect.innerHTML = cats.map(c => `
+      <option value="${escapeHTML(c.id)}">${escapeHTML(c.label)}</option>
+    `).join('');
+  }
+
   if (project) {
     modalTitle.textContent = 'Edit Proyek: ' + (project.title || '');
     document.getElementById('projFormId').value = project.id || '';
     document.getElementById('projFormTitle').value = project.title || '';
     document.getElementById('projFormClient').value = project.client || '';
     document.getElementById('projFormCategory').value = project.category || '';
-    document.getElementById('projFormCategoryFilter').value = project.categoryFilter || 'fullstack';
+    document.getElementById('projFormCategoryFilter').value = project.categoryFilter || (cats[0]?.id || 'fullstack');
     document.getElementById('projFormYear').value = project.year || '2025';
     document.getElementById('projFormCover').value = project.coverImage || '';
     document.getElementById('projFormShortDesc').value = project.shortDescription || '';
@@ -264,6 +390,9 @@ function openProjectModal(project = null) {
     document.getElementById('projFormId').value = '';
     document.getElementById('projFormCover').value = '';
     document.getElementById('projFormGallery').value = '[]';
+    if (filterSelect && cats.length > 0) {
+      filterSelect.value = cats[0].id;
+    }
     projMultiUploaderInstance?.setImages([]);
   }
 
@@ -284,6 +413,133 @@ function initProjectsTab() {
     maxWidth: 1400
   });
 
+  // 1. Quick Section Header & Visibility for Projects
+  const pLabel = document.getElementById('projectsQuickLabel');
+  const pTitle = document.getElementById('projectsQuickTitle');
+  const pSub = document.getElementById('projectsQuickSubtitle');
+  const quickToggleProj = document.getElementById('quickToggleProjects');
+  const btnSavePHeader = document.getElementById('btnSaveProjectsHeaderQuick');
+
+  const curProjHeading = currentData.layout?.headings?.projects || DEFAULT_PORTFOLIO_DATA.layout.headings.projects;
+  if (pLabel) pLabel.value = curProjHeading.label || '';
+  if (pTitle) pTitle.value = curProjHeading.title || '';
+  if (pSub) pSub.value = curProjHeading.subtitle || '';
+
+  if (quickToggleProj) {
+    quickToggleProj.checked = currentData.layout?.sections?.projects !== false;
+    quickToggleProj.onchange = (e) => {
+      if (!currentData.layout) currentData.layout = {};
+      if (!currentData.layout.sections) currentData.layout.sections = {};
+      currentData.layout.sections.projects = e.target.checked;
+      savePortfolioData(currentData);
+      showAdminToast(e.target.checked ? 'Bagian Karya Terpilih diaktifkan' : 'Bagian Karya Terpilih disembunyikan');
+    };
+  }
+
+  if (btnSavePHeader) {
+    btnSavePHeader.onclick = () => {
+      if (!currentData.layout) currentData.layout = {};
+      if (!currentData.layout.headings) currentData.layout.headings = {};
+      currentData.layout.headings.projects = {
+        label: pLabel ? pLabel.value.trim() : '',
+        title: pTitle ? pTitle.value.trim() : '',
+        subtitle: pSub ? pSub.value.trim() : ''
+      };
+      savePortfolioData(currentData);
+      showAdminToast('Judul bagian Proyek berhasil disimpan!');
+    };
+  }
+
+  // 2. Project Categories Management (Filter Bar)
+  if (!Array.isArray(currentData.projectCategories) || currentData.projectCategories.length === 0) {
+    currentData.projectCategories = JSON.parse(JSON.stringify(DEFAULT_PORTFOLIO_DATA.projectCategories));
+  }
+
+  const renderAdminProjectCategoriesList = () => {
+    const container = document.getElementById('adminProjectCategoriesList');
+    if (!container) return;
+
+    container.innerHTML = currentData.projectCategories.map((cat, idx) => `
+      <div class="category-item-row" data-cat-id="${cat.id}">
+        <div style="display: flex; align-items: center; gap: 0.8rem; flex: 1;">
+          <span class="category-badge-pill">${escapeHTML(cat.id)}</span>
+          <input type="text" class="cat-label-input" value="${escapeHTML(cat.label)}" style="max-width: 260px; font-weight: 500;">
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button type="button" class="btn-admin btn-sm btn-save-cat" data-idx="${idx}" title="Simpan Nama Kategori">
+            💾 Simpan
+          </button>
+          ${cat.id !== 'all' ? `
+            <button type="button" class="btn-item-action btn-item-delete btn-delete-cat" data-idx="${idx}" title="Hapus Kategori">
+              🗑️
+            </button>
+          ` : '<span style="font-size: 0.72rem; color: var(--admin-text-dim); padding: 0.2rem 0.5rem;">Default</span>'}
+        </div>
+      </div>
+    `).join('');
+
+    // Attach listeners
+    container.querySelectorAll('.btn-save-cat').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        const row = btn.closest('.category-item-row');
+        const input = row?.querySelector('.cat-label-input');
+        if (input && input.value.trim()) {
+          currentData.projectCategories[idx].label = input.value.trim();
+          savePortfolioData(currentData);
+          showAdminToast(`Kategori "${input.value.trim()}" berhasil disimpan!`);
+        }
+      });
+    });
+
+    container.querySelectorAll('.btn-delete-cat').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        const cat = currentData.projectCategories[idx];
+        if (confirm(`Hapus kategori "${cat.label}"?`)) {
+          currentData.projectCategories.splice(idx, 1);
+          savePortfolioData(currentData);
+          renderAdminProjectCategoriesList();
+          showAdminToast('Kategori berhasil dihapus');
+        }
+      });
+    });
+  };
+
+  renderAdminProjectCategoriesList();
+
+  const btnAddCat = document.getElementById('btnAddCategoryBtn');
+  if (btnAddCat) {
+    btnAddCat.onclick = () => {
+      const labelInput = document.getElementById('newCatLabel');
+      const idInput = document.getElementById('newCatId');
+      const label = labelInput?.value.trim();
+      let slug = idInput?.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+      if (!label) {
+        alert('Harap masukkan nama kategori');
+        return;
+      }
+      if (!slug) {
+        slug = label.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      }
+
+      const exists = currentData.projectCategories.some(c => c.id === slug);
+      if (exists) {
+        alert('Kode ID kategori sudah ada, silakan gunakan kode lain');
+        return;
+      }
+
+      currentData.projectCategories.push({ id: slug, label: label });
+      savePortfolioData(currentData);
+      renderAdminProjectCategoriesList();
+      if (labelInput) labelInput.value = '';
+      if (idInput) idInput.value = '';
+      showAdminToast(`Kategori "${label}" berhasil ditambahkan!`);
+    };
+  }
+
+  // 3. Render Projects List
   renderAdminProjectsList();
 
   const btnAdd = document.getElementById('btnOpenAddProjectModal');
@@ -317,20 +573,20 @@ function initProjectsTab() {
 
       const projectPayload = {
         id: id || 'proj-' + Date.now(),
-        title: document.getElementById('projFormTitle').value,
-        client: document.getElementById('projFormClient').value,
-        category: document.getElementById('projFormCategory').value,
+        title: (document.getElementById('projFormTitle').value || '').trim(),
+        client: (document.getElementById('projFormClient').value || '').trim(),
+        category: (document.getElementById('projFormCategory').value || '').trim(),
         categoryFilter: document.getElementById('projFormCategoryFilter').value,
-        year: document.getElementById('projFormYear').value,
+        year: (document.getElementById('projFormYear').value || '').trim(),
         coverImage: cover,
         gallery: gallery,
-        shortDescription: document.getElementById('projFormShortDesc').value,
-        challenge: document.getElementById('projFormChallenge').value,
-        solution: document.getElementById('projFormSolution').value,
-        impact: document.getElementById('projFormImpact').value,
+        shortDescription: (document.getElementById('projFormShortDesc').value || '').trim(),
+        challenge: (document.getElementById('projFormChallenge').value || '').trim(),
+        solution: (document.getElementById('projFormSolution').value || '').trim(),
+        impact: (document.getElementById('projFormImpact').value || '').trim(),
         tags: tags,
-        demoUrl: document.getElementById('projFormDemo').value,
-        githubUrl: document.getElementById('projFormGithub').value
+        demoUrl: (document.getElementById('projFormDemo').value || '').trim(),
+        githubUrl: (document.getElementById('projFormGithub').value || '').trim()
       };
 
       if (!currentData.projects) currentData.projects = [];
@@ -994,6 +1250,31 @@ function initTestimonialsTab() {
     maxWidth: 400
   });
 
+  // Quick Section Header for Testimonials ("Kata Mereka" - Screenshot 2)
+  const tLabel = document.getElementById('testiQuickLabel');
+  const tTitle = document.getElementById('testiQuickTitle');
+  const tSub = document.getElementById('testiQuickSubtitle');
+  const btnSaveTHeader = document.getElementById('btnSaveTestimonialsHeaderQuick');
+
+  const curTestiHeading = currentData.layout?.headings?.testimonials || DEFAULT_PORTFOLIO_DATA.layout.headings.testimonials;
+  if (tLabel) tLabel.value = curTestiHeading.label || '';
+  if (tTitle) tTitle.value = curTestiHeading.title || '';
+  if (tSub) tSub.value = curTestiHeading.subtitle || '';
+
+  if (btnSaveTHeader) {
+    btnSaveTHeader.onclick = () => {
+      if (!currentData.layout) currentData.layout = {};
+      if (!currentData.layout.headings) currentData.layout.headings = {};
+      currentData.layout.headings.testimonials = {
+        label: tLabel ? tLabel.value.trim() : '',
+        title: tTitle ? tTitle.value.trim() : '',
+        subtitle: tSub ? tSub.value.trim() : ''
+      };
+      savePortfolioData(currentData);
+      showAdminToast('Judul dan deskripsi "Kata Mereka" berhasil disimpan!');
+    };
+  }
+
   renderAdminTestimonialsList();
 
   const btnAdd = document.getElementById('btnOpenAddTestiModal');
@@ -1309,6 +1590,216 @@ function showAdminToast(msg) {
   setTimeout(() => {
     toast.classList.remove('show');
   }, 3000);
+}
+
+/**
+ * Layout, Visibility & Headings Studio
+ */
+function initLayoutTab() {
+  const sectionsGrid = document.getElementById('layoutSectionsGrid');
+  const componentsGrid = document.getElementById('layoutComponentsGrid');
+  const headingsList = document.getElementById('layoutHeadingsList');
+  const btnSave = document.getElementById('btnSaveLayoutSettings');
+  const quickToggleTesti = document.getElementById('quickToggleTestimonials');
+
+  if (!currentData.layout) {
+    currentData.layout = JSON.parse(JSON.stringify(DEFAULT_PORTFOLIO_DATA.layout));
+  }
+
+  // 1. Render Section Toggles
+  const sectionMeta = [
+    { key: 'hero', title: 'Hero & Pengenalan Utama', desc: 'Area paling atas dengan judul peran, status, bio, dan foto' },
+    { key: 'services', title: 'Layanan & Filosofi', desc: 'Kartu pilar penawaran keahlian rekayasa & desain' },
+    { key: 'projects', title: 'Karya & Proyek Terpilih', desc: 'Daftar showcase portofolio beserta tombol filter' },
+    { key: 'skills', title: 'Matriks Keahlian & Tech Stack', desc: 'Kartu keahlian teknologi (Frontend, Backend, DevOps, dsb.)' },
+    { key: 'experience', title: 'Riwayat Karir & Milestone', desc: 'Linimasa perjalanan karir dan dedikasi profesional' },
+    { key: 'testimonials', title: 'Ulasan Klien ("Kata Mereka")', desc: 'Kutipan rekomendasi dan feedback dari klien / rekan kerja' },
+    { key: 'contact', title: 'Kontak & Formulir Diskusi', desc: 'Formulir pesan dan info kontak langsung' }
+  ];
+
+  if (sectionsGrid) {
+    sectionsGrid.innerHTML = sectionMeta.map(sec => {
+      const isChecked = currentData.layout.sections?.[sec.key] !== false;
+      return `
+        <label class="switch-control" for="secToggle_${sec.key}">
+          <div class="switch-label-group">
+            <span class="switch-title">
+              <span>${sec.title}</span>
+              <span class="badge-status ${isChecked ? 'badge-status-on' : 'badge-status-off'}" id="secBadge_${sec.key}">
+                ${isChecked ? 'Aktif' : 'Disembunyikan'}
+              </span>
+            </span>
+            <span class="switch-desc">${sec.desc}</span>
+          </div>
+          <div class="switch-toggle">
+            <input type="checkbox" id="secToggle_${sec.key}" data-section="${sec.key}" ${isChecked ? 'checked' : ''}>
+            <span class="switch-slider"></span>
+          </div>
+        </label>
+      `;
+    }).join('');
+
+    // Attach listeners
+    sectionsGrid.querySelectorAll('input[type="checkbox"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const key = e.target.getAttribute('data-section');
+        const checked = e.target.checked;
+        if (!currentData.layout.sections) currentData.layout.sections = {};
+        currentData.layout.sections[key] = checked;
+
+        const badge = document.getElementById(`secBadge_${key}`);
+        if (badge) {
+          badge.textContent = checked ? 'Aktif' : 'Disembunyikan';
+          badge.className = `badge-status ${checked ? 'badge-status-on' : 'badge-status-off'}`;
+        }
+
+        if (key === 'testimonials' && quickToggleTesti) {
+          quickToggleTesti.checked = checked;
+        }
+
+        savePortfolioData(currentData);
+        showAdminToast(`${checked ? 'Menampilkan' : 'Menyembunyikan'} bagian ${key}`);
+      });
+    });
+  }
+
+  // Quick toggle in testimonials tab
+  if (quickToggleTesti) {
+    quickToggleTesti.checked = currentData.layout.sections?.testimonials !== false;
+    quickToggleTesti.addEventListener('change', (e) => {
+      const checked = e.target.checked;
+      if (!currentData.layout.sections) currentData.layout.sections = {};
+      currentData.layout.sections.testimonials = checked;
+
+      const mainToggle = document.getElementById('secToggle_testimonials');
+      if (mainToggle) mainToggle.checked = checked;
+      const badge = document.getElementById('secBadge_testimonials');
+      if (badge) {
+        badge.textContent = checked ? 'Aktif' : 'Disembunyikan';
+        badge.className = `badge-status ${checked ? 'badge-status-on' : 'badge-status-off'}`;
+      }
+
+      savePortfolioData(currentData);
+      showAdminToast(checked ? 'Bagian Ulasan Klien diaktifkan' : 'Bagian Ulasan Klien disembunyikan');
+    });
+  }
+
+  // 2. Render Component Toggles
+  const componentMeta = [
+    { key: 'statusBadge', title: 'Badge Ketersediaan Hero', desc: '"Tersedia untuk Proyek Baru & Kolaborasi"' },
+    { key: 'heroTagline', title: 'Tagline Utama Hero', desc: 'Sub-headline singkat di bawah judul peran' },
+    { key: 'heroBio', title: 'Paragraf Biografi Hero', desc: 'Teks narasi profil & filosofi kerja lengkap' },
+    { key: 'heroCtaPrimary', title: 'Tombol Utama Hero', desc: '"Mulai Diskusi Proyek"' },
+    { key: 'heroCtaSecondary', title: 'Tombol Sekunder Hero', desc: '"Jelajahi Karya Terpilih ↓"' },
+    { key: 'heroStats', title: 'Kartu Statistik Hero', desc: 'Angka Pengalaman, Proyek, dan Kepuasan' },
+    { key: 'heroVisualCard', title: 'Kartu Foto / Visual Hero', desc: 'Frame foto portrait di sisi kanan hero' },
+    { key: 'navCtaBtn', title: 'Tombol Header Navbar', desc: 'Tombol "Diskusi Proyek" di bilah navigasi' },
+    { key: 'themeToggle', title: 'Tombol Mode Tema', desc: 'Ikon ◐ (Gelap / Terang) di navbar' },
+    { key: 'contactForm', title: 'Formulir Kirim Pesan', desc: 'Input nama, email, dan pesan pengunjung' },
+    { key: 'directEmailCard', title: 'Kartu Surel Langsung', desc: 'Kotak direct mail dan tombol salin alamat surel' }
+  ];
+
+  if (componentsGrid) {
+    componentsGrid.innerHTML = componentMeta.map(comp => {
+      const isChecked = currentData.layout.components?.[comp.key] !== false;
+      return `
+        <label class="switch-control" for="compToggle_${comp.key}">
+          <div class="switch-label-group">
+            <span class="switch-title">
+              <span>${comp.title}</span>
+              <span class="badge-status ${isChecked ? 'badge-status-on' : 'badge-status-off'}" id="compBadge_${comp.key}">
+                ${isChecked ? 'Aktif' : 'Disembunyikan'}
+              </span>
+            </span>
+            <span class="switch-desc">${comp.desc}</span>
+          </div>
+          <div class="switch-toggle">
+            <input type="checkbox" id="compToggle_${comp.key}" data-component="${comp.key}" ${isChecked ? 'checked' : ''}>
+            <span class="switch-slider"></span>
+          </div>
+        </label>
+      `;
+    }).join('');
+
+    componentsGrid.querySelectorAll('input[type="checkbox"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const key = e.target.getAttribute('data-component');
+        const checked = e.target.checked;
+        if (!currentData.layout.components) currentData.layout.components = {};
+        currentData.layout.components[key] = checked;
+
+        const badge = document.getElementById(`compBadge_${key}`);
+        if (badge) {
+          badge.textContent = checked ? 'Aktif' : 'Disembunyikan';
+          badge.className = `badge-status ${checked ? 'badge-status-on' : 'badge-status-off'}`;
+        }
+
+        savePortfolioData(currentData);
+        showAdminToast(`${checked ? 'Menampilkan' : 'Menyembunyikan'} elemen ${key}`);
+      });
+    });
+  }
+
+  // 3. Render Headings Editor
+  const headingMeta = [
+    { key: 'testimonials', title: 'Bagian Ulasan Klien ("Kata Mereka")', icon: '💬' },
+    { key: 'services', title: 'Bagian Layanan & Nilai', icon: '🛠️' },
+    { key: 'projects', title: 'Bagian Karya Terpilih', icon: '💼' },
+    { key: 'skills', title: 'Bagian Keahlian & Stack', icon: '⚡' },
+    { key: 'experience', title: 'Bagian Riwayat Karir', icon: '📜' },
+    { key: 'contact', title: 'Bagian Kontak & Ajakan', icon: '📬' }
+  ];
+
+  if (headingsList) {
+    const headings = currentData.layout.headings || {};
+    headingsList.innerHTML = headingMeta.map(h => {
+      const cur = headings[h.key] || {};
+      return `
+        <div style="background: var(--admin-bg); padding: 1.5rem; border: 1px solid var(--admin-border); border-radius: var(--radius-sm); margin-bottom: 1.2rem;">
+          <h4 style="font-size: 1rem; color: var(--admin-accent); font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>${h.icon}</span> <span>${h.title}</span>
+          </h4>
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="hLabel_${h.key}">Label / Kicker (Teks Kecil di Atas Judul)</label>
+              <input type="text" id="hLabel_${h.key}" value="${escapeHTML(cur.label || '')}" placeholder="Misal: Kata Mereka">
+            </div>
+            <div class="form-field">
+              <label for="hTitle_${h.key}">Judul Utama (*Gunakan _teks_ untuk miring*)</label>
+              <input type="text" id="hTitle_${h.key}" value="${escapeHTML(cur.title || '')}" placeholder="Judul section...">
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="hSub_${h.key}">Deskripsi / Subtitle</label>
+            <textarea id="hSub_${h.key}" rows="2" placeholder="Penjelasan singkat section...">${escapeHTML(cur.subtitle || '')}</textarea>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Save All Layout Settings Button
+  if (btnSave) {
+    btnSave.onclick = () => {
+      if (!currentData.layout) currentData.layout = {};
+      if (!currentData.layout.headings) currentData.layout.headings = {};
+
+      headingMeta.forEach(h => {
+        const labelInput = document.getElementById(`hLabel_${h.key}`);
+        const titleInput = document.getElementById(`hTitle_${h.key}`);
+        const subInput = document.getElementById(`hSub_${h.key}`);
+
+        currentData.layout.headings[h.key] = {
+          label: labelInput ? labelInput.value.trim() : '',
+          title: titleInput ? titleInput.value.trim() : '',
+          subtitle: subInput ? subInput.value.trim() : ''
+        };
+      });
+
+      savePortfolioData(currentData);
+      showAdminToast('Seluruh pengaturan tata letak, visibilitas & judul berhasil disimpan!');
+    };
+  }
 }
 
 function escapeHTML(str) {

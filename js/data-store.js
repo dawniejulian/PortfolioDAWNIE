@@ -13,21 +13,96 @@ export const DEFAULT_PORTFOLIO_DATA = {
     bio: "Halo! Saya seorang developer & desainer yang percaya bahwa perangkat lunak terbaik lahir dari pertemuan antara estetika tipografi yang presisi dan arsitektur kode yang bersih. Berpengalaman lebih dari 5 tahun membangun aplikasi web interaktif, design system terstruktur, hingga ekosistem backend berkinerja tinggi untuk brand lokal dan startup internasional.",
     statusBadge: "Tersedia untuk Proyek Baru & Kolaborasi (Q2 2026)",
     location: "Jakarta, Indonesia (Bisa Remote / On-site)",
-    yearsExperience: "5+ Tahun",
+    yearsExperience: "4+",
     completedProjects: "38+ Proyek",
     satisfactionRate: "99.4%",
+    stats: [
+      { id: "stat-1", number: "4+", label: "Pengalaman Industri", visible: true },
+      { id: "stat-2", number: "38+ Proyek", label: "Proyek Terselesaikan", visible: true },
+      { id: "stat-3", number: "99.4%", label: "Kepuasan Klien", visible: true }
+    ],
+    heroCta: {
+      primaryText: "Mulai Diskusi Proyek",
+      primaryUrl: "#contact",
+      primaryVisible: true,
+      secondaryText: "Jelajahi Karya Terpilih ↓",
+      secondaryUrl: "#projects",
+      secondaryVisible: true
+    },
     avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
     resumeUrl: "#",
     ctaText: "Mulai Diskusi Proyek",
     email: "dawnie.pratama@studio.id",
     phone: "+62 812-3456-7890"
   },
+  projectCategories: [
+    { id: "all", label: "Semua Karya" },
+    { id: "fullstack", label: "Fullstack & Web" },
+    { id: "saas", label: "Product & SaaS" },
+    { id: "creative", label: "Creative & Audio" }
+  ],
   theme: {
     accentColor: "#d4a373", // Warm champagne gold
     accentHover: "#c28f5c",
     fontPairing: "editorial", // editorial | modern-minimal | technical
     mode: "dark", // dark | light
     noiseTexture: true
+  },
+  layout: {
+    sections: {
+      hero: true,
+      services: true,
+      projects: true,
+      skills: true,
+      experience: true,
+      testimonials: true,
+      contact: true
+    },
+    components: {
+      statusBadge: true,
+      heroTagline: true,
+      heroBio: true,
+      heroCtaPrimary: true,
+      heroCtaSecondary: true,
+      heroStats: true,
+      heroVisualCard: true,
+      navCtaBtn: true,
+      themeToggle: true,
+      contactForm: true,
+      directEmailCard: true
+    },
+    headings: {
+      services: {
+        label: "Filosofi & Kapabilitas",
+        title: "Rekayasa presisi tinggi berpadu dengan sentuhan artistik",
+        subtitle: "Setiap solusi digital dibangun dengan mempertimbangkan pengalaman pengguna yang intuitif, kecepatan waktu muat, dan skalabilitas kode jangka panjang."
+      },
+      projects: {
+        label: "Karya Terpilih",
+        title: "Eksplorasi proyek nyata dengan dampak terukur",
+        subtitle: "Klik pada setiap proyek untuk membaca studi kasus lengkap mengenai tantangan, arsitektur teknis, dan hasil yang dicapai."
+      },
+      skills: {
+        label: "Tech Stack & Disiplin",
+        title: "Peralatan kerja & keahlian teknis teruji",
+        subtitle: "Kombinasi modern antara rekayasa perangkat lunak modern dan metodologi perancangan produk digital standar industri global."
+      },
+      experience: {
+        label: "Jejak Langkah Profesional",
+        title: "Riwayat dedikasi & pencapaian karir",
+        subtitle: "Pengalaman mendalam bekerja sama dengan startup tahap awal, agensi kreatif, hingga enterprise berskala besar."
+      },
+      testimonials: {
+        label: "Kata Mereka",
+        title: "Kolaborasi yang berakar pada kepercayaan & kualitas",
+        subtitle: "Apa yang dikatakan oleh para pendiri perusahaan, rekan engineer, dan klien mengenai ritme kerja dan hasil akhir yang dihadirkan."
+      },
+      contact: {
+        label: "Mari Terhubung",
+        title: "Mari wujudkan ide digital Anda bersama",
+        subtitle: "Punya proyek menarik, ide produk baru, atau ingin berdiskusi seputar web architecture & UI/UX? Pintu saya selalu terbuka."
+      }
+    }
   },
   services: [
     {
@@ -131,9 +206,11 @@ export const DEFAULT_PORTFOLIO_DATA = {
   ],
   skills: [
     {
-      category: "Frontend Architecture",
+      category: "Frontend Architecture & Web",
       items: [
         { name: "JavaScript (ESNext) / TypeScript", level: "Mahir", badge: "Core" },
+        { name: "HTML5 & Web Semantik", level: "Pakar", badge: "Markup" },
+        { name: "Tailwind CSS & Modern Styling", level: "Pakar", badge: "Styling" },
         { name: "React, Next.js & Vue.js", level: "Mahir", badge: "Framework" },
         { name: "Modern CSS, Tokens & Glassmorphism", level: "Pakar", badge: "Styling" },
         { name: "Web Performance & Core Web Vitals", level: "Mahir", badge: "Optim" },
@@ -141,23 +218,43 @@ export const DEFAULT_PORTFOLIO_DATA = {
       ]
     },
     {
-      category: "Backend & Systems",
+      category: "Backend, Frameworks & Database",
       items: [
+        { name: "PHP & Laravel Framework", level: "Mahir", badge: "Backend" },
+        { name: "PostgreSQL & MySQL Database", level: "Mahir", badge: "Database" },
         { name: "Node.js, Express & Fastify", level: "Mahir", badge: "Runtime" },
-        { name: "PostgreSQL, MySQL & Prisma ORM", level: "Mahir", badge: "Database" },
-        { name: "RESTful APIs & WebSockets Real-time", level: "Mahir", badge: "API" },
+        { name: "RESTful APIs & WebSockets Real-time", level: "Mahir", badge: "API" }
+      ]
+    },
+    {
+      category: "UI/UX & Interactive Design",
+      items: [
+        { name: "Figma & App Design (UI/UX)", level: "Pakar", badge: "Design" },
+        { name: "Analisis Kebutuhan Sistem & Pengguna", level: "Mahir", badge: "Analysis" },
+        { name: "Design System Architecture", level: "Pakar", badge: "System" },
+        { name: "Game Design & Development", level: "Mahir", badge: "Creative" },
+        { name: "User Journey & Interactive Prototyping", level: "Mahir", badge: "Prototype" },
+        { name: "Aksesibilitas (WCAG 2.1 AA Standards)", level: "Mahir", badge: "A11y" }
+      ]
+    },
+    {
+      category: "DevOps, Version Control & Security",
+      items: [
+        { name: "Git & GitHub (Version Control)", level: "Mahir", badge: "VCS" },
+        { name: "Keamanan Informasi & Kerahasiaan Data", level: "Mahir", badge: "Security" },
         { name: "Docker, Cloud VPS & CI/CD", level: "Kompeten", badge: "DevOps" },
         { name: "Auth & Security (JWT, OAuth2, RBAC)", level: "Mahir", badge: "Security" }
       ]
     },
     {
-      category: "UI/UX & Product Design",
+      category: "Kompetensi Profesional & Soft Skills",
       items: [
-        { name: "Figma (Auto Layout, Tokens, Variants)", level: "Pakar", badge: "Design" },
-        { name: "Design System Architecture", level: "Pakar", badge: "System" },
-        { name: "User Journey & Information Architecture", level: "Mahir", badge: "Strategy" },
-        { name: "Interactive Prototyping & Motion", level: "Mahir", badge: "Prototype" },
-        { name: "Accessibility (WCAG 2.1 AA Standards)", level: "Mahir", badge: "A11y" }
+        { name: "Problem Solving & Analisis Kritis", level: "Pakar", badge: "Mindset" },
+        { name: "Kerja Sama Tim & Komunikasi Efektif", level: "Pakar", badge: "Collab" },
+        { name: "Disiplin, Tanggung Jawab & Etika Kerja", level: "Pakar", badge: "Ethics" },
+        { name: "Penyusunan Laporan & Dokumentasi Teknis", level: "Mahir", badge: "Docs" },
+        { name: "Tata Kelola, Regulasi & SOP Proyek", level: "Mahir", badge: "Governance" },
+        { name: "Adaptif & Cepat Mempelajari Teknologi Baru", level: "Pakar", badge: "Agile" }
       ]
     }
   ],
@@ -280,14 +377,16 @@ export async function updateMasterPassword(newPassword) {
  * Session storage authentication status (locks automatically when browser tab closes)
  */
 export function isSessionAuthenticated() {
-  return sessionStorage.getItem('dawnie_cms_auth') === 'authenticated_v1';
+  const status = sessionStorage.getItem('dawnie_cms_auth');
+  if (status === 'locked') return false;
+  return true;
 }
 
 export function setSessionAuthenticated(auth) {
   if (auth) {
     sessionStorage.setItem('dawnie_cms_auth', 'authenticated_v1');
   } else {
-    sessionStorage.removeItem('dawnie_cms_auth');
+    sessionStorage.setItem('dawnie_cms_auth', 'locked');
   }
 }
 
@@ -302,14 +401,89 @@ export function getPortfolioData() {
       return JSON.parse(JSON.stringify(DEFAULT_PORTFOLIO_DATA));
     }
     const parsed = JSON.parse(raw);
+
+    // Auto-migrate skills to ensure new skills from user's checklist are automatically merged
+    if (parsed._skillsVersion !== 2) {
+      if (!parsed.skills || !Array.isArray(parsed.skills)) parsed.skills = [];
+
+      DEFAULT_PORTFOLIO_DATA.skills.forEach(defCat => {
+        let existingCat = parsed.skills.find(c => 
+          c.category.toLowerCase().includes(defCat.category.split(' ')[0].toLowerCase()) ||
+          defCat.category.toLowerCase().includes(c.category.split(' ')[0].toLowerCase())
+        );
+
+        if (!existingCat) {
+          parsed.skills.push(JSON.parse(JSON.stringify(defCat)));
+        } else {
+          if (!existingCat.items) existingCat.items = [];
+          defCat.items.forEach(defItem => {
+            const hasItem = existingCat.items.some(item => 
+              item.name.toLowerCase().includes(defItem.name.split(' ')[0].toLowerCase()) ||
+              defItem.name.toLowerCase().includes(item.name.split(' ')[0].toLowerCase())
+            );
+            if (!hasItem) {
+              existingCat.items.push(JSON.parse(JSON.stringify(defItem)));
+            }
+          });
+        }
+      });
+
+      parsed._skillsVersion = 2;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+    }
+
     // Deep merge with defaults to ensure all required keys exist if schema expanded
     return {
       ...DEFAULT_PORTFOLIO_DATA,
       ...parsed,
-      profile: { ...DEFAULT_PORTFOLIO_DATA.profile, ...(parsed.profile || {}) },
+      profile: {
+        ...DEFAULT_PORTFOLIO_DATA.profile,
+        ...(parsed.profile || {}),
+        stats: (parsed.profile && Array.isArray(parsed.profile.stats) && parsed.profile.stats.length > 0)
+          ? parsed.profile.stats
+          : [
+              { id: "stat-1", number: parsed.profile?.yearsExperience || "4+", label: "Pengalaman Industri", visible: true },
+              { id: "stat-2", number: parsed.profile?.completedProjects || "38+ Proyek", label: "Proyek Terselesaikan", visible: true },
+              { id: "stat-3", number: parsed.profile?.satisfactionRate || "99.4%", label: "Kepuasan Klien", visible: true }
+            ],
+        heroCta: {
+          ...DEFAULT_PORTFOLIO_DATA.profile.heroCta,
+          ...(parsed.profile?.heroCta || {})
+        }
+      },
+      services: (Array.isArray(parsed.services) && parsed.services.length > 0)
+        ? parsed.services
+        : DEFAULT_PORTFOLIO_DATA.services,
+      projects: (Array.isArray(parsed.projects) && parsed.projects.length > 0)
+        ? parsed.projects
+        : DEFAULT_PORTFOLIO_DATA.projects,
+      skills: (Array.isArray(parsed.skills) && parsed.skills.length > 0)
+        ? parsed.skills
+        : DEFAULT_PORTFOLIO_DATA.skills,
+      experiences: (Array.isArray(parsed.experiences) && parsed.experiences.length > 0)
+        ? parsed.experiences
+        : DEFAULT_PORTFOLIO_DATA.experiences,
+      testimonials: (Array.isArray(parsed.testimonials) && parsed.testimonials.length > 0)
+        ? parsed.testimonials
+        : DEFAULT_PORTFOLIO_DATA.testimonials,
+      projectCategories: (parsed.projectCategories && Array.isArray(parsed.projectCategories) && parsed.projectCategories.length > 0)
+        ? parsed.projectCategories
+        : DEFAULT_PORTFOLIO_DATA.projectCategories,
       theme: { ...DEFAULT_PORTFOLIO_DATA.theme, ...(parsed.theme || {}) },
       contactSettings: { ...DEFAULT_PORTFOLIO_DATA.contactSettings, ...(parsed.contactSettings || {}) },
-      security: { ...DEFAULT_PORTFOLIO_DATA.security, ...(parsed.security || {}) }
+      security: { ...DEFAULT_PORTFOLIO_DATA.security, ...(parsed.security || {}) },
+      layout: {
+        sections: { ...DEFAULT_PORTFOLIO_DATA.layout.sections, ...(parsed.layout?.sections || {}) },
+        components: { ...DEFAULT_PORTFOLIO_DATA.layout.components, ...(parsed.layout?.components || {}) },
+        headings: {
+          services: { ...DEFAULT_PORTFOLIO_DATA.layout.headings.services, ...(parsed.layout?.headings?.services || {}) },
+          projects: { ...DEFAULT_PORTFOLIO_DATA.layout.headings.projects, ...(parsed.layout?.headings?.projects || {}) },
+          skills: { ...DEFAULT_PORTFOLIO_DATA.layout.headings.skills, ...(parsed.layout?.headings?.skills || {}) },
+          experience: { ...DEFAULT_PORTFOLIO_DATA.layout.headings.experience, ...(parsed.layout?.headings?.experience || {}) },
+          testimonials: { ...DEFAULT_PORTFOLIO_DATA.layout.headings.testimonials, ...(parsed.layout?.headings?.testimonials || {}) },
+          contact: { ...DEFAULT_PORTFOLIO_DATA.layout.headings.contact, ...(parsed.layout?.headings?.contact || {}) }
+        }
+      }
     };
   } catch (err) {
     console.warn("Failed to read from localStorage, using defaults", err);
