@@ -48,7 +48,7 @@
           <li data-nav-for="projects"><a href="#projects" class="nav-link">Karya</a></li>
           <li data-nav-for="skills"><a href="#skills" class="nav-link">Keahlian</a></li>
           <li data-nav-for="experience"><a href="#experience" class="nav-link">Pengalaman</a></li>
-          <li data-nav-for="testimonials"><a href="#testimonials" class="nav-link">Ulasan</a></li>
+          <li data-nav-for="testimonials" style="display: none;"><a href="#testimonials" class="nav-link">Ulasan</a></li>
           <li data-nav-for="contact"><a href="#contact" class="nav-link">Kontak</a></li>
         </ul>
       </nav>
@@ -73,7 +73,7 @@
           <div class="hero-text-col">
             <div class="status-badge" id="statusBadge">
               <span class="status-indicator"></span>
-              <span id="statusBadgeText">Tersedia untuk Proyek Baru & Kolaborasi (Q2 2026)</span>
+              <span id="statusBadgeText">Open to Work &amp; Collaboration</span>
             </div>
 
             <h1 class="hero-title" id="heroRole">
@@ -82,11 +82,11 @@
             </h1>
 
             <p class="hero-tagline" id="heroTagline">
-              Merancang antarmuka digital bernilai estetika tinggi dengan pondasi rekayasa perangkat lunak yang kokoh &amp; skalabel.
+              Freshgraduate S1 Software Engineering Telkom University Purwokerto
             </p>
 
             <p class="hero-bio" id="heroBio">
-              Halo! Saya seorang developer &amp; desainer yang percaya bahwa perangkat lunak terbaik lahir dari pertemuan antara estetika tipografi yang presisi dan arsitektur kode yang bersih. Berpengalaman lebih dari 5 tahun membangun aplikasi web interaktif, design system terstruktur, hingga ekosistem backend berkinerja tinggi untuk brand lokal dan startup internasional.
+              Fullstack Web Developer &amp; UI/UX Designer berusia 24 tahun dengan pengalaman sebagai Web Developer Intern di Dinkominfo Banyumas dan Game Designer di program MSIB Batch 7 Infinite Learning, PT Kinema Systrans Multimedia. Mahir dalam Laravel, React.js, Node.js/Express.js, dan PostgreSQL, serta berpengalaman bekerja dengan metodologi Agile SDLC. Menggunakan Figma, VS Code, Draw.io, Docker, dan GitHub dalam pekerjaan harian dan kolaborasi tim.
             </p>
 
             <div class="hero-cta-group" id="heroCtaGroup">
@@ -94,19 +94,7 @@
               <a href="#projects" class="btn-secondary" id="heroSecondaryCta">Jelajahi Karya Terpilih ↓</a>
             </div>
 
-            <div class="hero-stats" id="heroStatsContainer">
-              <div class="stat-item" id="heroStatYearsItem">
-                <div class="stat-number" id="statYears">5+ <em>Thn</em></div>
-                <div class="stat-label">Pengalaman Industri</div>
-              </div>
-              <div class="stat-item" id="heroStatProjectsItem">
-                <div class="stat-number" id="statProjects">38+ <em>Karya</em></div>
-                <div class="stat-label">Proyek Terselesaikan</div>
-              </div>
-              <div class="stat-item" id="heroStatSatisfactionItem">
-                <div class="stat-number" id="statSatisfaction">99.4%</div>
-                <div class="stat-label">Kepuasan Klien</div>
-              </div>
+            <div class="hero-stats" id="heroStatsContainer" style="display: none;">
             </div>
           </div>
 
@@ -209,8 +197,8 @@
       </div>
     </section>
 
-    <!-- Testimonials / Word of Mouth -->
-    <section class="section-padding" id="testimonials" style="background: var(--bg-secondary);">
+    <!-- Testimonials Section (Hidden by User) -->
+    <section class="section-padding" id="testimonials" style="display: none;">
       <div class="container">
         <header class="section-header" id="testimonialsSectionHeader">
           <span class="section-label" id="testimonialsSectionLabel">Kata Mereka</span>
@@ -223,7 +211,6 @@
         </header>
 
         <div class="testimonials-grid" id="testimonialsContainer">
-          <!-- Dynamically populated from data-store.js -->
         </div>
       </div>
     </section>
@@ -245,7 +232,7 @@
 
               <div class="contact-email-card" id="contactDirectCard">
                 <div class="contact-email-label">Surel Langsung (Direct Mail)</div>
-                <div class="contact-email-val" id="directEmailVal">dawnie.pratama@studio.id</div>
+                <div class="contact-email-val" id="directEmailVal">dawniejulian@gmail.com</div>
                 <button type="button" class="btn-copy-email" id="copyEmailBtn">
                   <span>📋</span> <span>Salin alamat surel</span>
                 </button>
@@ -258,7 +245,9 @@
                 Saluran Sosial &amp; Portofolio Kode
               </div>
               <div class="socials-row" id="socialsRow">
-                <!-- Dynamically populated from data-store.js -->
+                <a class="social-pill" href="https://www.linkedin.com/in/dawniejuliannugroho/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+                <a class="social-pill" href="https://wa.me/6283163007345" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
+                <a class="social-pill" href="https://github.com/dawniejulian" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
               </div>
             </div>
           </div>

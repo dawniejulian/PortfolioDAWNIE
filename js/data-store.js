@@ -3,7 +3,7 @@
  * Handles persistence via localStorage, reactive events, export/import, and fallback defaults.
  */
 
-const STORAGE_KEY = 'dawnie_portfolio_cms_v2';
+const STORAGE_KEY = 'dawnie_portfolio_cms_v3';
 
 export const DEFAULT_PORTFOLIO_DATA = {
   profile: {
@@ -17,9 +17,24 @@ export const DEFAULT_PORTFOLIO_DATA = {
     completedProjects: "38+ Proyek",
     satisfactionRate: "99.4%",
     stats: [
-      { id: "stat-1", number: "4+", label: "Pengalaman Industri", visible: true },
-      { id: "stat-2", number: "38+ Proyek", label: "Proyek Terselesaikan", visible: true },
-      { id: "stat-3", number: "99.4%", label: "Kepuasan Klien", visible: true }
+          {
+                "id": "stat-1",
+                "number": "4+",
+                "label": "Pengalaman Industri",
+                "visible": false
+          },
+          {
+                "id": "stat-2",
+                "number": "38+ Proyek",
+                "label": "Proyek Terselesaikan",
+                "visible": false
+          },
+          {
+                "id": "stat-3",
+                "number": "99.4%",
+                "label": "Kepuasan Klien",
+                "visible": false
+          }
     ],
     heroCta: {
       primaryText: "Mulai Diskusi Proyek",
@@ -33,7 +48,7 @@ export const DEFAULT_PORTFOLIO_DATA = {
     resumeUrl: "#",
     ctaText: "Mulai Diskusi Proyek",
     email: "dawniejulian@gmail.com",
-    phone: "+62 812-3456-7890"
+    phone: "+62 831-6300-7345"
   },
   projectCategories: [
       {
@@ -61,60 +76,60 @@ export const DEFAULT_PORTFOLIO_DATA = {
     noiseTexture: true
   },
   layout: {
-    sections: {
-      hero: true,
-      services: true,
-      projects: true,
-      skills: true,
-      experience: true,
-      testimonials: true,
-      contact: true
-    },
-    components: {
-      statusBadge: true,
-      heroTagline: true,
-      heroBio: true,
-      heroCtaPrimary: true,
-      heroCtaSecondary: true,
-      heroStats: true,
-      heroVisualCard: true,
-      navCtaBtn: true,
-      themeToggle: true,
-      contactForm: true,
-      directEmailCard: true
-    },
-    headings: {
-      services: {
-        label: "Filosofi & Kapabilitas",
-        title: "Rekayasa presisi tinggi berpadu dengan sentuhan artistik",
-        subtitle: "Setiap solusi digital dibangun dengan mempertimbangkan pengalaman pengguna yang intuitif, kecepatan waktu muat, dan skalabilitas kode jangka panjang."
+      "sections": {
+          "hero": true,
+          "services": true,
+          "projects": true,
+          "skills": true,
+          "experience": true,
+          "testimonials": false,
+          "contact": true
       },
-      projects: {
-        label: "Karya Terpilih",
-        title: "Eksplorasi proyek nyata dengan dampak terukur",
-        subtitle: "Klik pada setiap proyek untuk membaca studi kasus lengkap mengenai tantangan, arsitektur teknis, dan hasil yang dicapai."
+      "components": {
+          "statusBadge": true,
+          "heroTagline": true,
+          "heroBio": true,
+          "heroCtaPrimary": true,
+          "heroCtaSecondary": true,
+          "heroStats": false,
+          "heroVisualCard": true,
+          "navCtaBtn": true,
+          "themeToggle": true,
+          "contactForm": true,
+          "directEmailCard": true
       },
-      skills: {
-        label: "Tech Stack & Disiplin",
-        title: "Peralatan kerja & keahlian teknis teruji",
-        subtitle: "Kombinasi modern antara rekayasa perangkat lunak modern dan metodologi perancangan produk digital standar industri global."
-      },
-      experience: {
-        label: "Jejak Langkah Profesional",
-        title: "Riwayat dedikasi & pencapaian karir",
-        subtitle: "Pengalaman mendalam bekerja sama dengan startup tahap awal, agensi kreatif, hingga enterprise berskala besar."
-      },
-      testimonials: {
-        label: "Kata Mereka",
-        title: "Kolaborasi yang berakar pada kepercayaan & kualitas",
-        subtitle: "Apa yang dikatakan oleh para pendiri perusahaan, rekan engineer, dan klien mengenai ritme kerja dan hasil akhir yang dihadirkan."
-      },
-      contact: {
-        label: "Mari Terhubung",
-        title: "Mari wujudkan ide digital Anda bersama",
-        subtitle: "Punya proyek menarik, ide produk baru, atau ingin berdiskusi seputar web architecture & UI/UX? Pintu saya selalu terbuka."
+      "headings": {
+          "services": {
+              "label": "Filosofi & Kapabilitas",
+              "title": "Rekayasa presisi tinggi berpadu dengan sentuhan artistik",
+              "subtitle": "Setiap solusi digital dibangun dengan mempertimbangkan pengalaman pengguna yang intuitif, kecepatan waktu muat, dan skalabilitas kode jangka panjang."
+          },
+          "projects": {
+              "label": "Karya Terpilih",
+              "title": "Eksplorasi proyek nyata dengan dampak terukur",
+              "subtitle": "Klik pada setiap proyek untuk membaca studi kasus lengkap mengenai tantangan, arsitektur teknis, dan hasil yang dicapai."
+          },
+          "skills": {
+              "label": "Tech Stack & Disiplin",
+              "title": "Peralatan kerja & keahlian teknis teruji",
+              "subtitle": "Kombinasi modern antara rekayasa perangkat lunak modern dan metodologi perancangan produk digital standar industri global."
+          },
+          "experience": {
+              "label": "Jejak Langkah Profesional",
+              "title": "Riwayat dedikasi & pencapaian karir",
+              "subtitle": "Pengalaman mendalam bekerja sama dengan startup tahap awal, agensi kreatif, hingga enterprise berskala besar."
+          },
+          "testimonials": {
+              "label": "Kata Mereka",
+              "title": "Kolaborasi yang berakar pada kepercayaan & kualitas",
+              "subtitle": "Apa yang dikatakan oleh para pendiri perusahaan, rekan engineer, dan klien mengenai ritme kerja dan hasil akhir yang dihadirkan."
+          },
+          "contact": {
+              "label": "Mari Terhubung",
+              "title": "Mari wujudkan ide digital Anda bersama",
+              "subtitle": "Punya proyek menarik, ide produk baru, atau ingin berdiskusi seputar web architecture & UI/UX? Pintu saya selalu terbuka."
+          }
       }
-    }
   },
   services: [
     {
@@ -363,75 +378,57 @@ export const DEFAULT_PORTFOLIO_DATA = {
     }
   ],
   experiences: [
-    {
-      id: "exp-1",
-      period: "2023 — Sekarang",
-      role: "Lead Fullstack & Product Designer",
-      company: "Studio Aksara Digital",
-      location: "Jakarta (Hybrid)",
-      description: "Memimpin perancangan produk web dari fase riset UX hingga arsitektur kode frontend/backend. Mengembangkan design system yang digunakan oleh 14 engineer dan memangkas waktu delivery fitur hingga 40%."
-    },
-    {
-      id: "exp-2",
-      period: "2021 — 2023",
-      role: "Senior Frontend Engineer",
-      company: "Nusa Finansia Labs",
-      location: "Remote",
-      description: "Bertanggung jawab atas performa dashboard analitik keuangan dengan ribuan data point real-time. Mengoptimalkan waktu render awal hingga di bawah 1 detik dengan teknik dynamic import dan virtualized list."
-    },
-    {
-      id: "exp-3",
-      period: "2019 — 2021",
-      role: "UI/UX Designer & Web Developer",
-      company: "Karsa Media Studio",
-      location: "Bandung",
-      description: "Merancang dan membangun 25+ situs interaktif serta landing page komersial berkonversi tinggi untuk berbagai klien ritel, F&B, dan institusi pendidikan."
-    }
+      {
+          "id": "exp-1793875886455",
+          "role": "Web Developer",
+          "company": "Dinkominfo Banyumas",
+          "period": "Juni - Agustus 2025",
+          "location": "Jl. Masjid No.8, Purwokerto / Onsite",
+          "description": "Sebelumnya di Dinkominfo Banyumas belum ada sistem untuk mengelola kegiatan magang. Pendaftaran masih dilakukan secara konvensional, yaitu datang langsung atau menghubungi staf terkait, dan data peserta magang, termasuk data diri dan hasil karya, belum terpusat. Calon peserta juga tidak dapat mengetahui ketersediaan kuota magang sebelum mendaftar. Untuk mengatasi hal tersebut, dikembangkan platform simpelmagang.dinkominfo.banyumas.go.id oleh tim beranggotakan sekitar 5 orang secara bertahap. Dalam proyek ini, saya berkontribusi mengembangkan fitur transparansi kuota magang per bidang serta pengajuan magang (form pengajuan magang , seleksi calon peserta). Dampaknya, proses pengajuan magang kini dapat dilakukan secara online melalui form pengajuan, dan admin dapat menyeleksi calon peserta langsung di dalam sistem. Calon peserta pun dapat melihat kuota magang per bidang sehingga lebih mudah memilih bidang dan periode magang. Seluruh proses, dari pendaftaran hingga penyelesaian magang, kini berjalan dalam satu sistem terpusat."
+      },
+      {
+          "id": "exp-1793875749787",
+          "role": "Game Designer",
+          "company": "Infinite Studio | PT Kinema Systrans Multimedia",
+          "period": "September - Desember 2024",
+          "location": "Online",
+          "description": "Selama program ini, saya mempelajari game design, teori permainan, etika\ndan pengembangan cerita melalui capstone project. Kontribusi saya adalah merancang\nlevel, membuat dokumentasi GDD, dan membuat game playtest. Selain itu, saya mempelajari desain UI/UX, suara, serta monetisasi\ndan advanced mechanics. Soft skills seperti komunikasi dan personal\nbranding diuji melalui presentasi proyek. Program ini juga mengajarkan\nmanajemen proyek dan perencanaan untuk setiap challenge yang\ndiselesaikan."
+      },
+      {
+          "id": "exp-1793875706243",
+          "role": "UI / UX Designer",
+          "company": "Scope Compettition",
+          "period": "November 2025",
+          "location": "Online",
+          "description": "Juara 1 Lomba Scope UI/UX Compettition yang diadakan oleh Unika Atma Jaya Jakarta. Lomba ini saya menangkan dengan karya bernama GOCAP - MONEY MANAGER"
+      }
   ],
-  testimonials: [
-    {
-      id: "testi-1",
-      author: "Aditya Wardhana",
-      role: "Co-Founder & CEO",
-      company: "Atelier Studio Lab",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-      quote: "Bekerja dengan Dawnie adalah pengalaman yang luar biasa. Sangat jarang menemukan talenta yang memahami detail estetika tipografi sekelas desainer senior sekaligus mampu menulis kode backend yang sangat rapi dan kokoh.",
-      rating: 5,
-      project: "ArchFlow SaaS Platform"
-    },
-    {
-      id: "testi-2",
-      author: "Ratna Kusuma",
-      role: "Head of Marketing & Brand",
-      company: "Yayasan Kriya Budaya",
-      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
-      quote: "Hasil website Kolektif melampaui ekspektasi dewan kurator kami. Tampilannya sangat elegan, berjiwa seni, dan yang terpenting: tidak terasa kaku atau seperti template buatan AI. Pengunjung kami jatuh cinta sejak pandangan pertama.",
-      rating: 5,
-      project: "Kolektif Web Platform"
-    },
-    {
-      id: "testi-3",
-      author: "Bayu Wicaksono",
-      role: "Engineering Director",
-      company: "Nusa Finansia Labs",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-      quote: "Kecepatan eksekusi dan perhatian terhadap detail aksesibilitas membuat setiap sprint menjadi mulus. Dawnie selalu memikirkan user experience bahkan saat menangani logika state yang rumit.",
-      rating: 5,
-      project: "Fintech Real-time Dashboard"
-    }
-  ],
+  testimonials: [],
   socialLinks: [
-    { name: "GitHub", url: "https://github.com", icon: "github", handle: "@dawniepratama" },
-    { name: "LinkedIn", url: "https://linkedin.com", icon: "linkedin", handle: "Dawnie Pratama" },
-    { name: "Figma Community", url: "https://figma.com", icon: "figma", handle: "@dawnie" },
-    { name: "Dribbble", url: "https://dribbble.com", icon: "dribbble", handle: "dawniestudio" },
-    { name: "WhatsApp", url: "https://wa.me/6281234567890", icon: "whatsapp", handle: "+62 812-3456-7890" }
+      {
+          "name": "LinkedIn",
+          "url": "https://www.linkedin.com/in/dawniejuliannugroho/",
+          "icon": "linkedin",
+          "handle": "dawniejuliannugroho"
+      },
+      {
+          "name": "WhatsApp",
+          "url": "https://wa.me/6283163007345",
+          "icon": "whatsapp",
+          "handle": "+62 831-6300-7345"
+      },
+      {
+          "name": "GitHub",
+          "url": "https://github.com/dawniejulian",
+          "icon": "github",
+          "handle": "@dawniejulian"
+      }
   ],
     contactSettings: {
-    heading: "Mari Wujudkan Ide Digital Anda Bersama",
-    subheading: "Punya proyek menarik, ide produk baru, atau ingin berdiskusi seputar web architecture & UI/UX? Pintu saya selalu terbuka.",
-    availableNotice: "Waktu respons rata-rata: < 24 jam",
-    directEmail: "dawnie.pratama@studio.id"
+      "heading": "Mari Wujudkan Ide Digital Anda Bersama",
+      "subheading": "Punya proyek menarik, ide produk baru, atau ingin berdiskusi seputar web architecture & UI/UX? Pintu saya selalu terbuka.",
+      "availableNotice": "Waktu respons rata-rata: < 24 jam",
+      "directEmail": "dawniejulian@gmail.com"
   },
   security: {
     // Default password: dawnie2026
@@ -600,9 +597,9 @@ export function getPortfolioData() {
       experiences: (Array.isArray(parsed.experiences) && parsed.experiences.length > 0)
         ? parsed.experiences
         : DEFAULT_PORTFOLIO_DATA.experiences,
-      testimonials: (Array.isArray(parsed.testimonials) && parsed.testimonials.length > 0)
+      testimonials: Array.isArray(parsed.testimonials)
         ? parsed.testimonials
-        : DEFAULT_PORTFOLIO_DATA.testimonials,
+        : (DEFAULT_PORTFOLIO_DATA.testimonials || []),
       projectCategories: (parsed.projectCategories && Array.isArray(parsed.projectCategories) && parsed.projectCategories.length > 0)
         ? parsed.projectCategories
         : DEFAULT_PORTFOLIO_DATA.projectCategories,

@@ -41,7 +41,7 @@
     "resumeUrl": "#",
     "ctaText": "Mulai Diskusi Proyek",
     "email": "dawniejulian@gmail.com",
-    "phone": "+62 812-3456-7890",
+    "phone": "+62 831-6300-7345",
     "navCtaText": "Diskusi Proyek"
   },
   "projectCategories": [
@@ -85,7 +85,7 @@
       "heroBio": true,
       "heroCtaPrimary": true,
       "heroCtaSecondary": true,
-      "heroStats": true,
+      "heroStats": false,
       "heroVisualCard": true,
       "navCtaBtn": true,
       "themeToggle": true,
@@ -520,56 +520,25 @@
       "description": "Juara 1 Lomba Scope UI/UX Compettition yang diadakan oleh Unika Atma Jaya Jakarta. Lomba ini saya menangkan dengan karya bernama GOCAP - MONEY MANAGER"
     }
   ],
-  "testimonials": [
-    {
-      "id": "testi-1",
-      "author": "Aditya Wardhana",
-      "role": "Co-Founder & CEO",
-      "company": "Atelier Studio Lab",
-      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-      "quote": "Bekerja dengan Dawnie adalah pengalaman yang luar biasa. Sangat jarang menemukan talenta yang memahami detail estetika tipografi sekelas desainer senior sekaligus mampu menulis kode backend yang sangat rapi dan kokoh.",
-      "rating": 5,
-      "project": "ArchFlow SaaS Platform"
-    },
-    {
-      "id": "testi-2",
-      "author": "Ratna Kusuma",
-      "role": "Head of Marketing & Brand",
-      "company": "Yayasan Kriya Budaya",
-      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
-      "quote": "Hasil website Kolektif melampaui ekspektasi dewan kurator kami. Tampilannya sangat elegan, berjiwa seni, dan yang terpenting: tidak terasa kaku atau seperti template buatan AI. Pengunjung kami jatuh cinta sejak pandangan pertama.",
-      "rating": 5,
-      "project": "Kolektif Web Platform"
-    },
-    {
-      "id": "testi-3",
-      "author": "Bayu Wicaksono",
-      "role": "Engineering Director",
-      "company": "Nusa Finansia Labs",
-      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-      "quote": "Kecepatan eksekusi dan perhatian terhadap detail aksesibilitas membuat setiap sprint menjadi mulus. Dawnie selalu memikirkan user experience bahkan saat menangani logika state yang rumit.",
-      "rating": 5,
-      "project": "Fintech Real-time Dashboard"
-    }
-  ],
+  "testimonials": [],
   "socialLinks": [
     {
       "name": "LinkedIn",
       "url": "https://www.linkedin.com/in/dawniejuliannugroho/",
       "icon": "linkedin",
-      "handle": "LinkedIn"
+      "handle": "dawniejuliannugroho"
     },
     {
-      "name": "Whatsapp",
+      "name": "WhatsApp",
       "url": "https://wa.me/6283163007345",
       "icon": "whatsapp",
-      "handle": "Whatsapp"
+      "handle": "+62 831-6300-7345"
     },
     {
-      "name": "Github",
+      "name": "GitHub",
       "url": "https://github.com/dawniejulian",
       "icon": "github",
-      "handle": "Github"
+      "handle": "@dawniejulian"
     }
   ],
   "contactSettings": {

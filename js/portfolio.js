@@ -258,12 +258,18 @@ function renderProfile(profile) {
         ];
 
     const visibleStats = statsList.filter(s => s.visible !== false);
-    statsContainer.innerHTML = visibleStats.map(stat => `
-      <div class="stat-item" id="${escapeHTML(stat.id || '')}">
-        <div class="stat-number">${escapeHTML(stat.number || '')}</div>
-        <div class="stat-label">${escapeHTML(stat.label || '')}</div>
-      </div>
-    `).join('');
+    if (visibleStats.length === 0) {
+      statsContainer.style.display = 'none';
+      statsContainer.innerHTML = '';
+    } else {
+      statsContainer.style.display = 'grid';
+      statsContainer.innerHTML = visibleStats.map(stat => `
+        <div class="stat-item" id="${escapeHTML(stat.id || '')}">
+          <div class="stat-number">${escapeHTML(stat.number || '')}</div>
+          <div class="stat-label">${escapeHTML(stat.label || '')}</div>
+        </div>
+      `).join('');
+    }
   }
 }
 
@@ -646,7 +652,15 @@ function renderExperiences(experiences) {
  */
 function renderTestimonials(testimonials) {
   const container = document.getElementById('testimonialsContainer');
-  if (!container || !testimonials) return;
+  const section = document.getElementById('testimonials');
+  const navItem = document.querySelector('li[data-nav-for="testimonials"]');
+
+  if (!testimonials || !Array.isArray(testimonials) || testimonials.length === 0) {
+    if (section) section.style.display = 'none';
+    if (navItem) navItem.style.display = 'none';
+    if (container) container.innerHTML = '';
+    return;
+  }
 
   container.innerHTML = testimonials.map(testi => `
     <article class="testi-card">
@@ -676,7 +690,7 @@ function renderSocialsAndContact(profile, socialLinks, contactSettings) {
   const contactSubheading = document.getElementById('contactSubheading');
   const footerCopy = document.getElementById('footerCopy');
 
-  const email = (contactSettings && contactSettings.directEmail) || (profile && profile.email) || 'dawnie.pratama@studio.id';
+  const email = (contactSettings && contactSettings.directEmail) || (profile && profile.email) || 'dawniejulian@gmail.com';
 
   if (directEmailVal) directEmailVal.textContent = email;
   if (contactHeading && contactSettings) contactHeading.textContent = contactSettings.heading;
