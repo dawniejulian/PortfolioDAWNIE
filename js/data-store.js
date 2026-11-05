@@ -3,7 +3,7 @@
  * Handles persistence via localStorage, reactive events, export/import, and fallback defaults.
  */
 
-const STORAGE_KEY = 'dawnie_portfolio_cms_v1';
+const STORAGE_KEY = 'dawnie_portfolio_cms_v2';
 
 export const DEFAULT_PORTFOLIO_DATA = {
   profile: {
@@ -29,17 +29,29 @@ export const DEFAULT_PORTFOLIO_DATA = {
       secondaryUrl: "#projects",
       secondaryVisible: true
     },
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+    avatarUrl: "assets/images/avatar.jpg",
     resumeUrl: "#",
     ctaText: "Mulai Diskusi Proyek",
     email: "dawniejulian@gmail.com",
     phone: "+62 812-3456-7890"
   },
   projectCategories: [
-    { id: "all", label: "Semua Karya" },
-    { id: "fullstack", label: "Fullstack & Web" },
-    { id: "saas", label: "Product & SaaS" },
-    { id: "creative", label: "Creative & Audio" }
+      {
+          "id": "all",
+          "label": "Semua Karya"
+      },
+      {
+          "id": "fullstack",
+          "label": "Fullstack & Web"
+      },
+      {
+          "id": "ui---ux",
+          "label": "Web Design"
+      },
+      {
+          "id": "ui---ux-app",
+          "label": "Mobile APP Design"
+      }
   ],
   theme: {
     accentColor: "#d4a373", // Warm champagne gold
@@ -131,78 +143,170 @@ export const DEFAULT_PORTFOLIO_DATA = {
     }
   ],
   projects: [
-    {
-      id: "proj-1",
-      title: "Kolektif — Platform Kurasi Desain & Kriya Nusantara",
-      slug: "kolektif-craft-platform",
-      category: "Fullstack & UI/UX",
-      categoryFilter: "fullstack",
-      year: "2025",
-      client: "Yayasan Kriya Budaya",
-      featured: true,
-      coverImage: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80",
-      shortDescription: "Platform e-commerce & katalog interaktif untuk 120+ pengrajin lokal dengan arsitektur headless checkout dan waktu muat di bawah 0.8 detik.",
-      challenge: "Pengrajin kriya lokal kesulitan menampilkan keunikan material dan nilai sejarah produk mereka di platform e-commerce generik yang monoton dan lambat.",
-      solution: "Merancang antarmuka bergaya editorial majalah dengan visual full-bleed, filter berbasis bahan kriya, dan sistem checkout instan tanpa login rumit.",
-      impact: "Meningkatkan durasi rata-rata sesi pengguna sebesar 185% dan mencatat lebih dari Rp 1.4 Miliar transaksi di kuartal pertama.",
-      tags: ["React", "Node.js", "PostgreSQL", "Figma", "Stripe API"],
-      demoUrl: "https://example.com/kolektif",
-      githubUrl: "https://github.com/example/kolektif"
-    },
-    {
-      id: "proj-2",
-      title: "ArchFlow — Studio Management OS for Architects",
-      slug: "archflow-saas",
-      category: "Product Design & SaaS",
-      categoryFilter: "saas",
-      year: "2025",
-      client: "Atelier Studio Lab",
-      featured: true,
-      coverImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-      shortDescription: "Sistem operasi terpadu bagi biro arsitektur untuk memantau blueprint, progres lapangan, revisi klien, dan estimasi biaya secara real-time.",
-      challenge: "Komunikasi antara arsitek, drafter, dan kontraktor sering tercecer di puluhan grup chat dan spreadsheet yang rentan salah revisi.",
-      solution: "Membangun kanban interaktif dengan viewer blueprint SVG interaktif, manajemen dokumen berbasis versi, dan dashboard biaya transparan.",
-      impact: "Menghemat 14 jam kerja administratif per proyek dan diadopsi oleh 18 biro arsitek di Asia Tenggara.",
-      tags: ["TypeScript", "Next.js", "Tailwind CSS", "Canvas API", "Supabase"],
-      demoUrl: "https://example.com/archflow",
-      githubUrl: "https://github.com/example/archflow"
-    },
-    {
-      id: "proj-3",
-      title: "Svara — Streaming Audio & Arsip Cerita Tradisi",
-      slug: "svara-audio-app",
-      category: "Mobile Web & Audio",
-      categoryFilter: "creative",
-      year: "2024",
-      client: "Inisiatif Suara Nusantara",
-      featured: true,
-      coverImage: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80",
-      shortDescription: "Web player audio beresolusi tinggi dengan visualizer spektrum gelombang suara real-time dan kurasi cerita lisan nusantara.",
-      challenge: "Menghadirkan pengalaman audio imersif di peramban seluler tanpa lagging atau konsumsi baterai yang boros.",
-      solution: "Mengoptimalkan Web Audio API dan kanvas hardware-accelerated dengan antarmuka bertema warm charcoal yang nyaman di mata.",
-      impact: "Mencatat 45.000 pendengar aktif bulanan dengan bounce rate rendah di angka 12%.",
-      tags: ["Web Audio API", "HTML5 Canvas", "Vue 3", "Node.js", "Redis"],
-      demoUrl: "https://example.com/svara",
-      githubUrl: "https://github.com/example/svara"
-    },
-    {
-      id: "proj-4",
-      title: "Aethelgard — Minimalist Timepiece Atelier",
-      slug: "aethelgard-luxury",
-      category: "Design System & E-Commerce",
-      categoryFilter: "fullstack",
-      year: "2024",
-      client: "Aethelgard Horology",
-      featured: false,
-      coverImage: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80",
-      shortDescription: "Situs eksklusif jam tangan mewah dengan konfigurator material 360 derajat dan tipografi editorial berskala micro.",
-      challenge: "Menampilkan presisi mekanik jam tangan mewah tanpa membuat calon pembeli merasa sedang membuka toko online biasa.",
-      solution: "Mengombinasikan tata letak asimetris, mikro-animasi scroll, dan konfigurator tali kulit interaktif langsung di browser.",
-      impact: "Meningkatkan permohonan temu janji butik fisik sebesar 240% dalam 6 bulan peluncuran.",
-      tags: ["Vanilla JS", "WebGL", "Figma Token", "CSS Architecture"],
-      demoUrl: "https://example.com/aethelgard",
-      githubUrl: "https://github.com/example/aethelgard"
-    }
+      {
+          "id": "proj-1793875579775",
+          "title": "simpelmagang.dinkominfo.banyumas.go.id",
+          "client": "Dinkominfo Banyumas",
+          "category": "Situs Pendaftaran Magang",
+          "categoryFilter": "fullstack",
+          "year": "2025",
+          "coverImage": "assets/images/projects/simpelmagang-dinkominfo-banyum-cover.jpg",
+          "gallery": [
+              "assets/images/projects/simpelmagang-dinkominfo-banyum-gallery-1.jpg",
+              "assets/images/projects/simpelmagang-dinkominfo-banyum-gallery-2.jpg",
+              "assets/images/projects/simpelmagang-dinkominfo-banyum-gallery-3.jpg",
+              "assets/images/projects/simpelmagang-dinkominfo-banyum-gallery-4.jpg",
+              "assets/images/projects/simpelmagang-dinkominfo-banyum-gallery-5.jpg",
+              "assets/images/projects/simpelmagang-dinkominfo-banyum-gallery-6.jpg",
+              "assets/images/projects/simpelmagang-dinkominfo-banyum-gallery-7.jpg",
+              "assets/images/projects/simpelmagang-dinkominfo-banyum-gallery-8.jpg"
+          ],
+          "shortDescription": "Platform Pendaftaran magang yang bisa diakses oleh staff dinkominfo dan calon peserta magang",
+          "challenge": "Sebelumnya proses pengelolaan magang dilakukan secara konvensional, pendaftaran dilakukan dengan berkunjung ke Dinkominfo atau menghubungi pihak terkait. Tidak ada sumber data terpusat mengenai data peserta magang, data karya, kuota magang, dan proses magang",
+          "solution": "Kami mengembangkan platform simpelmagang.dinkominfo,banyumas.go.id berbasis laravel dengan frontend menggunakan php",
+          "impact": "Proses pendaftaran hingga penyelesaian magang bisa dilakukan secara online, transparan, dan mempunyai satu sumber data",
+          "tags": [
+              "Laravel",
+              "PosgreSQL",
+              "PHP"
+          ],
+          "demoUrl": "https://simpelmagang.dinkominfo.banyumaskab.go.id/login",
+          "githubUrl": ""
+      },
+      {
+          "id": "proj-1793875209516",
+          "title": "Katalog Web + Point of Sale",
+          "client": "TeamApple",
+          "category": "Katalog Web + Point of Sale",
+          "categoryFilter": "fullstack",
+          "year": "2026",
+          "coverImage": "assets/images/projects/katalog-web-point-of-sale-cover.jpg",
+          "gallery": [
+              "assets/images/projects/katalog-web-point-of-sale-gallery-1.jpg",
+              "assets/images/projects/katalog-web-point-of-sale-gallery-2.jpg",
+              "assets/images/projects/katalog-web-point-of-sale-gallery-3.jpg",
+              "assets/images/projects/katalog-web-point-of-sale-gallery-4.jpg",
+              "assets/images/projects/katalog-web-point-of-sale-gallery-5.jpg"
+          ],
+          "shortDescription": "Hasil dari Tugas Akhir  bekerja sama langsung dengan TeamApple untuk Katalog web yang terintegrasi dengan sistem Point of Sale",
+          "challenge": "",
+          "solution": "",
+          "impact": "",
+          "tags": [
+              "React.js",
+              "Express.js",
+              "Docker",
+              "PostgreSQL"
+          ],
+          "demoUrl": "",
+          "githubUrl": "https://github.com/dawniejulian/TeamApple"
+      },
+      {
+          "id": "proj-1793875045955",
+          "title": "Gocap - AI Money Manager",
+          "client": "Scope UI/UX Compettition",
+          "category": "Mobile App",
+          "categoryFilter": "ui---ux-app",
+          "year": "2025",
+          "coverImage": "assets/images/projects/gocap-ai-money-manager-cover.jpg",
+          "gallery": [
+              "assets/images/projects/gocap-ai-money-manager-gallery-1.jpg",
+              "assets/images/projects/gocap-ai-money-manager-gallery-2.jpg",
+              "assets/images/projects/gocap-ai-money-manager-gallery-3.jpg",
+              "assets/images/projects/gocap-ai-money-manager-gallery-4.jpg",
+              "assets/images/projects/gocap-ai-money-manager-gallery-5.jpg"
+          ],
+          "shortDescription": "Membuat Desain UI/UX untuk lomba Scope 2025 HMSI Unika Atma Jaya",
+          "challenge": "Mengatasi malas mencatat cashflow",
+          "solution": "Menggunakan AI sebagai fitur utama untuk pencatatan keuangan yang lebih cepat dan efektif",
+          "impact": "",
+          "tags": [
+              "Figma",
+              "UI Kit"
+          ],
+          "demoUrl": "https://www.figma.com/design/fki6zHU9YphmgTLKUxZqB0/FIX-DESIGN?t=41SqteeniDnYdYfc-1",
+          "githubUrl": ""
+      },
+      {
+          "id": "proj-1793874889244",
+          "title": "Warminote",
+          "client": "Event Prodi",
+          "category": "",
+          "categoryFilter": "fullstack",
+          "year": "2025",
+          "coverImage": "assets/images/projects/warminote-cover.jpg",
+          "gallery": [
+              "assets/images/projects/warminote-gallery-1.jpg",
+              "assets/images/projects/warminote-gallery-2.jpg",
+              "assets/images/projects/warminote-gallery-3.jpg",
+              "assets/images/projects/warminote-gallery-4.jpg",
+              "assets/images/projects/warminote-gallery-5.jpg",
+              "assets/images/projects/warminote-gallery-6.jpg",
+              "assets/images/projects/warminote-gallery-7.jpg",
+              "assets/images/projects/warminote-gallery-8.jpg",
+              "assets/images/projects/warminote-gallery-9.jpg"
+          ],
+          "shortDescription": "Warminote - Aplikasi Pencatatan Keuangan",
+          "challenge": "",
+          "solution": "",
+          "impact": "",
+          "tags": [
+              "Figma"
+          ],
+          "demoUrl": "https://www.figma.com/proto/ptF2DNpFjgNmR3NnXTNmL9/Aplikasi-Pencatatan-Pemasukan-Dan-Pengeluaran--Community-?node-id=5-2&p=f&t=z7HVHeYKKsom4QsP-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=5%3A2",
+          "githubUrl": ""
+      },
+      {
+          "id": "proj-1793874598634",
+          "title": "TeamApple Web E-Commerce",
+          "client": "TeamApple",
+          "category": "E-Commerce",
+          "categoryFilter": "ui---ux",
+          "year": "2023",
+          "coverImage": "assets/images/projects/teamapple-web-e-commerce-cover.jpg",
+          "gallery": [
+              "assets/images/projects/teamapple-web-e-commerce-gallery-1.jpg",
+              "assets/images/projects/teamapple-web-e-commerce-gallery-2.jpg",
+              "assets/images/projects/teamapple-web-e-commerce-gallery-3.jpg",
+              "assets/images/projects/teamapple-web-e-commerce-gallery-4.jpg",
+              "assets/images/projects/teamapple-web-e-commerce-gallery-5.jpg",
+              "assets/images/projects/teamapple-web-e-commerce-gallery-6.jpg",
+              "assets/images/projects/teamapple-web-e-commerce-gallery-7.jpg"
+          ],
+          "shortDescription": "Design Website E-commerce TeamApple (old)",
+          "challenge": "",
+          "solution": "",
+          "impact": "",
+          "tags": [
+              "Figma"
+          ],
+          "demoUrl": "https://www.figma.com/proto/mPvQFK4MqfmRLYImxfoEXM/Untitled?node-id=1-2&p=f&t=v82ePtGjCzDC4AZE-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1",
+          "githubUrl": ""
+      },
+      {
+          "id": "proj-1793874312948",
+          "title": "The Silent Guardian",
+          "client": "MSIB Batch 7 Game Design & Development",
+          "category": "Game Design",
+          "categoryFilter": "ui---ux-app",
+          "year": "2024",
+          "coverImage": "assets/images/projects/the-silent-guardian-cover.jpg",
+          "gallery": [
+              "assets/images/projects/the-silent-guardian-gallery-1.jpg"
+          ],
+          "shortDescription": "Game Design Document, Level Design, UI/UX Game",
+          "challenge": "",
+          "solution": "",
+          "impact": "",
+          "tags": [
+              "Canva",
+              "Unity",
+              "Notion",
+              "Figma"
+          ],
+          "demoUrl": "",
+          "githubUrl": ""
+      }
   ],
   skills: [
     {
