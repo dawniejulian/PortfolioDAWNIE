@@ -3,7 +3,7 @@
  * Handles persistence via localStorage, reactive events, export/import, and fallback defaults.
  */
 
-const STORAGE_KEY = 'dawnie_portfolio_cms_v3';
+const STORAGE_KEY = 'dawnie_portfolio_cms_v4';
 
 export const DEFAULT_PORTFOLIO_DATA = {
   profile: {
@@ -505,11 +505,13 @@ export async function syncPortfolioDataWithFile() {
     const raw = localStorage.getItem(STORAGE_KEY);
     const localData = raw ? JSON.parse(raw) : null;
 
-    // Check if localData is missing, has old placeholder data, or fileData has more/official projects
+    // Check if localData is missing, stale, or file has a newer _dataVersion
+    const localVersion = localData?._dataVersion || 0;
+    const fileVersion  = fileData._dataVersion  || 0;
     const isOutdated = !localData ||
       localData.profile?.name === 'Dawnie Pratama' ||
       !localData.projects ||
-      localData.projects.length < (fileData.projects?.length || 0) ||
+      fileVersion > localVersion ||
       (fileData.profile?.name && localData.profile?.name !== fileData.profile.name);
 
     if (isOutdated) {

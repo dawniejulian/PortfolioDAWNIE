@@ -523,22 +523,19 @@
   "testimonials": [],
   "socialLinks": [
     {
-      "name": "LinkedIn",
+      "platform": "linkedin",
       "url": "https://www.linkedin.com/in/dawniejuliannugroho/",
-      "icon": "linkedin",
-      "handle": "dawniejuliannugroho"
+      "visible": true
     },
     {
-      "name": "WhatsApp",
+      "platform": "whatsapp",
       "url": "https://wa.me/6283163007345",
-      "icon": "whatsapp",
-      "handle": "+62 831-6300-7345"
+      "visible": true
     },
     {
-      "name": "GitHub",
+      "platform": "github",
       "url": "https://github.com/dawniejulian",
-      "icon": "github",
-      "handle": "@dawniejulian"
+      "visible": true
     }
   ],
   "contactSettings": {
@@ -551,5 +548,7 @@
     "passwordHash": "a54281dd3a1aa1cd0866a9f174093c66c25bb365e02c3981b0c3f7b7520be051",
     "lastChanged": "2026-01-01"
   },
-  "_skillsVersion": 2
+  "_skillsVersion": 2,
+  "_dataVersion": 4,
+  "_lastUpdated": "2026-11-25"
 }
